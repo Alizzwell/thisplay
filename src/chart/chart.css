@@ -1,0 +1,7 @@
+.thisplay-chart .bar {
+  fill: steelblue;
+}
+
+.thisplay-chart .bar:hover {
+  fill: #f03223;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chart</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=11" />
+  <meta charset="UTF-8" />
+
+  <style>
+    input {width: 100px;}
+
+    .test_svg {
+      width: 800px;
+      height: 450px;
+      border: 1px solid black;
+    }
+  </style>
+  <link rel="stylesheet" href="../../src/chart/chart.css" />
+
+  <script src="../../bower_components/d3/d3.js"></script>
+  <script src="../../src/core.js"></script>
+  <script src="../../src/chart/chart.js"></script>
+</head>
+
+<body>
+  <svg class="test_svg" id="canvas" />
+  <hr/>
+
+  <button onClick="btnInitClk()">init</button>
+  <input type="text" id="init_size" placeholder="size" />
+  <p/>
+  <button onClick="btnSetDataClk()">setData</button>
+  <input type="text" id="setData_idx" placeholder="idx" />
+  <input type="text" id="setData_val" placeholder="val" />
+  <p/>
+  <button onClick="btnSwapClk()">swap</button>
+  <input type="text" id="swap_i" placeholder="i" />
+  <input type="text" id="swap_j" placeholder="j" />
+  <p/>
+  <button onClick="btnClearClk()">clear</button>
+  <p/>
+
+  <script>
+    var chart = new thisplay.Chart('#canvas');
+
+    function btnInitClk() {
+      var size = document.getElementById('init_size').value;
+      chart.init(Number(size));
+    }
+
+    function btnSetDataClk() {
+      var idx = document.getElementById('setData_idx').value;
+      var val = document.getElementById('setData_val').value;
+      chart.setData(Number(idx), Number(val));
+    }
+
+    function btnSwapClk() {
+      var i = document.getElementById('swap_i').value;
+      var j = document.getElementById('swap_j').value;
+      chart.swap(Number(i), Number(j));
+    }
+
+    function btnClearClk() {
+      chart.clear();
+    }
+  </script>
+</body>
+
+</html>

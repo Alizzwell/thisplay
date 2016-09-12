@@ -1,0 +1,22 @@
+{
+  "name": "thisplay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "authors": [
+    "baleian <baleian90@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Alizzwell/thisplay",
+  "ignore": [
+    "**/.*",
+    "src",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "d3": "^4.2.2"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "thisplay",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Alizzwell/thisplay.git"
+  },
+  "author": "baleian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Alizzwell/thisplay/issues"
+  },
+  "homepage": "https://github.com/Alizzwell/thisplay#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-cssmin": "^1.0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0"
+  }
+}
