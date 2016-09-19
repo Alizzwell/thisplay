@@ -36,6 +36,9 @@
   <input type="text" id="swap_i" placeholder="i" />
   <input type="text" id="swap_j" placeholder="j" />
   <p/>
+  <button onClick="btnHighlight()">highlight</button>
+    <input type="text" id="highlight_idx" placeholder="idx" />
+  <p/>
   <button onClick="btnClearClk()">clear</button>
   <p/>
 
@@ -58,6 +61,11 @@
       var j = document.getElementById('swap_j').value;
       chart.swap(Number(i), Number(j));
     }
+
+	function btnHighlight() {
+      var idx = document.getElementById('highlight_idx').value;
+	  chart.highlight(Number(idx));
+	}
 
     function btnClearClk() {
       chart.clear();

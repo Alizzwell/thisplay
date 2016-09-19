@@ -90,6 +90,15 @@
     this.svg.selectAll(".bar").remove();
   };
 
+  Chart.prototype.highlight = function (idx) {
+    var bar = this.svg.selectAll(".bar");
+    bar.data(this.data)
+    .style("fill", function (d, i) {
+      if (i == idx) return 'red';
+      return '';
+    });
+  };
+
   Chart.prototype.redrawBar = function () {
     var that = this;
     this.clear();
