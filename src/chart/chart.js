@@ -15,7 +15,7 @@
       .on("zoom", function () {
         svg.attr("transform", d3.event.transform);
       });
-    
+
     d3.select(target).call(zoom);
 
 
@@ -120,4 +120,4 @@
 
   thisplay.Chart = Chart;
 
-})(thisplay, d3);
+})(window.thisplay, window.d3);
