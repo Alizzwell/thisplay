@@ -5,10 +5,13 @@
 
 }).call(this);
 
-;(function (thisplay, d3) {
+;(function (window, d3) {
 	'use strict';
 
+
 	function Chart(target) {
+    d3 = d3 || window.d3;
+
     var svg = d3.select(target).append("g")
       .attr("class", "thisplay-chart")
       .attr("transform", "translate(25, 25)");
@@ -16,6 +19,7 @@
     var width = 600;
     var height = 400;
     var data = [];
+    var h = [];
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -30,6 +34,7 @@
     this.width = width;
     this.height = height;
     this.data = data;
+    this.h = h;
   }
 
   Chart.prototype.init = function (size) {
@@ -46,7 +51,7 @@
 
     this.x = x;
     this.y = y;
-    this.redrawBar();
+    this.redrawChart();
   };
 
   Chart.prototype.setData = function (idx, val) {
@@ -88,7 +93,7 @@
       });
 
     setTimeout(function () {
-      that.redrawBar();
+      that.redrawChart();
     }, swap_duration);
   };
 
@@ -98,15 +103,23 @@
   };
 
   Chart.prototype.highlight = function (idx) {
-    var bar = this.svg.selectAll(".bar");
-    bar.data(this.data)
-    .style("fill", function (d, i) {
-      if (i == idx) return 'red';
-      return '';
-    });
+    if (this.h.indexOf(idx) == -1) {
+      this.h.push(idx);
+    }
+    this.reColoring();
   };
 
-  Chart.prototype.redrawBar = function () {
+  Chart.prototype.unhighlight = function (idx) {
+    if (!idx) {
+      this.h = [];
+    }
+    else if (this.h.indexOf(idx) > -1) {
+      this.h.splice(this.h.indexOf(idx), 1);
+    }
+    this.reColoring();
+  };
+
+  Chart.prototype.redrawChart = function () {
     var that = this;
     this.clear();
 
@@ -125,6 +138,17 @@
       .attr("height", function(d) { return that.height - that.y(d); });
   };
 
-  thisplay.Chart = Chart;
 
-})(window.thisplay, window.d3);
+  Chart.prototype.reColoring = function () {
+    var self = this;
+    var bar = this.svg.selectAll(".bar");
+    bar.data(this.data)
+    .style("fill", function (d, i) {
+      if (self.h.indexOf(i) > -1) return 'red';
+      return '';
+    });
+  };
+
+  window.thisplay.Chart = Chart;
+
+})(window, window.d3);
