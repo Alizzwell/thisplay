@@ -1,8 +1,6 @@
 ;(function (undefined) {
 	'use strict';
 
-	var thisplay = thisplay || {};
-
-	this.thisplay = thisplay;
+	window.thisplay = window.thisplay || {};
 
 }).call(this);

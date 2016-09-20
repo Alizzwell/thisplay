@@ -16,7 +16,7 @@
     "test",
     "tests"
   ],
-  "devDependencies": {
+  "dependencies": {
     "d3": "^4.2.2"
   }
 }
