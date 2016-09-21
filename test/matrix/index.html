@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Maze</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=11" />
+  <meta charset="UTF-8" />
+  <style>
+    input {width: 100px;}
+
+    .test_svg {
+      width: 800px;
+      height: 450px;
+      border: 1px solid black;
+    }
+  </style>
+  <link rel="stylesheet" href="../../src/matrix/matrix.css" />
+  <script src="../../bower_components/d3/d3.js"></script>
+  <script src="../../src/core.js"></script>
+  <script src="../../src/matrix/matrix.js"></script>
+</head>
+
+<body>
+  <svg class="test_svg" id="canvas" />
+  <hr/>
+
+  <button onClick="btnInitClk()">init</button>
+  <input type="text" id="init_size_col" placeholder="col_size" />
+  <input type="text" id="init_size_row" placeholder="row_size" />
+  <p/>
+  <button onClick="btnSetDataClk()">setData</button>
+  <input type="text" id="setData_col_idx" placeholder="col_idx" />
+  <input type="text" id="setData_row_idx" placeholder="row_idx" />
+  <input type="text" id="setData_val" placeholder="val" />
+  <p/>
+  <button onClick="btnHighlightClk()">highlight</button>
+    <input type="text" id="highlight_col_idx" placeholder="col_idx" />
+    <input type="text" id="highlight_row_idx" placeholder="row_idx" />
+    <input type="text" id="highlight_color" placeholder="color" />
+  <p/>
+  <button onClick="btnUnHighlightClk()">unhighlight</button>
+  <input type="text" id="unhighlight_col_idx" placeholder="col_idx" />
+  <input type="text" id="unhighlight_row_idx" placeholder="row_idx" />
+  <p/>
+  <button onClick="btnUnHighlightAllClk()">unhighlightAll</button>
+  <p/>
+  <button onClick="btnUnHighlightColor()">unhighlightColor</button>
+  <input type="text" id="unhighlightColor_color" placeholder="color" />
+  <p/>
+  <button onClick="btnClearClk()">clear</button>
+  <p/>
+
+  <script>
+    var matrix = new thisplay.Matrix('#canvas');
+
+    function btnInitClk() {
+      var size_col = document.getElementById('init_size_col').value;
+      var size_row = document.getElementById('init_size_row').value;
+      matrix.init(Number(size_col), Number(size_row));
+    }
+
+    function btnSetDataClk() {
+      var col_idx = document.getElementById('setData_col_idx').value;
+      var row_idx = document.getElementById('setData_row_idx').value;
+      var val = document.getElementById('setData_val').value;
+      matrix.setData(Number(col_idx), Number(row_idx), Number(val));
+    }
+
+    function btnHighlightClk() {
+      var col_idx = document.getElementById('highlight_col_idx').value;
+      var row_idx = document.getElementById('highlight_row_idx').value;
+      var color = document.getElementById('highlight_color').value;
+      matrix.highlight(Number(col_idx), Number(row_idx), color);
+  	}
+
+    function btnUnHighlightClk() {
+      var col_idx = document.getElementById('unhighlight_col_idx').value;
+      var row_idx = document.getElementById('unhighlight_row_idx').value;
+      matrix.unhighlight(Number(col_idx), Number(row_idx));
+  	}
+
+    function btnUnHighlightAllClk() {
+      matrix.unhighlightAll();
+  	}
+
+    function btnUnHighlightColor() {
+      var color = document.getElementById('unhighlightColor_color').value;
+      matrix.unhighlightColor(color);
+  	}
+
+    function btnClearClk() {
+      matrix.clear();
+    }
+  </script>
+</body>
+
+</html>
