@@ -183,11 +183,11 @@
     this.data = data;
 	}
 
-	Matrix.prototype.init = function (col, row) {
+	Matrix.prototype.init = function (row, col) {
     this.data = new Array(row);
     for (var r = 0; r < row; r++) {
       this.data[r] = new Array(col);
-      for (var c = 0; c < row; c++) {
+      for (var c = 0; c < col; c++) {
         this.data[r][c] = {
           val: 0,
           color: "#f2f2f2"
@@ -228,7 +228,6 @@
 			.attr("y", 0)
       .attr("stroke", "#111111")
       .attr("fill", function (d) {
-        console.log(d);
         return d.color;
       })
 			.attr("width", rectSize)
@@ -239,7 +238,12 @@
     this.svg.selectAll(".matrix").remove();
   };
 
-	Matrix.prototype.highlight = function (col, row, color) {
+	Matrix.prototype.setData = function (row, col, val) {
+		this.data[row][col].val = val;
+		// TODO: redraw text in cell;
+	};
+
+	Matrix.prototype.highlight = function (row, col, color) {
     this.data[row][col].color = color;
 		this.svg.select(
       "#rowIdx_" + row +
@@ -249,10 +253,15 @@
       .attr("opacity", 0.8);
 	};
 
-	Matrix.prototype.unhighlight = function(col, row){
+	Matrix.prototype.unhighlight = function (row, col){
     this.svg.select(
       "#rowIdx_" + row +
       " #colIdx_" + col)
+      .attr("fill", "#f2f2f2");
+	};
+
+	Matrix.prototype.unhighlightAll = function (){
+    this.svg.selectAll(".cell")
       .attr("fill", "#f2f2f2");
 	};
 
