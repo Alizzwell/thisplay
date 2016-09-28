@@ -1,7 +1,7 @@
 .thisplay-chart .bar {
-  fill: steelblue;
+  fill: orange;
 }
 
 .thisplay-chart .bar:hover {
-  fill: #f03223;
+  fill: orchid;
 }

@@ -9,8 +9,8 @@
       .attr("class", "thisplay-chart")
       .attr("transform", "translate(25, 25)");
 
-    var width = 600;
-    var height = 400;
+    var width = 300;
+    var height = 200;
     var data = [];
     var h = [];
 
@@ -32,7 +32,9 @@
 
   Chart.prototype.init = function (size) {
     this.data = new Array(size);
+    this.h = new Array(size);
     this.data.fill(0);
+    this.h.fill(0);
 
     var x = d3.scaleBand()
       .range([0, this.width])
@@ -68,11 +70,15 @@
     var tmp = this.data[i];
     this.data[i] = this.data[j];
     this.data[j] = tmp;
+    tmp = this.h[i];
+    this.h[i] = this.h[j];
+    this.h[j] = tmp;
 
     this.svg.selectAll(".bar")
       .style("fill", function(d, idx) {
         if (idx == i || idx == j)
           return "orchid";
+        if (that.h[idx]) return "red";
       })
       .transition()
       .duration(swap_duration)
@@ -96,18 +102,16 @@
   };
 
   Chart.prototype.highlight = function (idx) {
-    if (this.h.indexOf(idx) == -1) {
-      this.h.push(idx);
-    }
+    this.h[idx] = 1;
     this.reColoring();
   };
 
   Chart.prototype.unhighlight = function (idx) {
     if (!idx) {
-      this.h = [];
+      this.h.fill(0);
     }
-    else if (this.h.indexOf(idx) > -1) {
-      this.h.splice(this.h.indexOf(idx), 1);
+    else {
+      this.h[idx] = 0;
     }
     this.reColoring();
   };
@@ -129,6 +133,8 @@
       .attr("width", this.x.bandwidth())
       .attr("y", function(d) { return that.y(d); })
       .attr("height", function(d) { return that.height - that.y(d); });
+
+    this.reColoring();
   };
 
 
@@ -137,8 +143,7 @@
     var bar = this.svg.selectAll(".bar");
     bar.data(this.data)
     .style("fill", function (d, i) {
-      if (self.h.indexOf(i) > -1) return 'red';
-      return '';
+      if (self.h[i] === 1) return 'red';
     });
   };
 
