@@ -29,7 +29,7 @@
 
     d3.select(target).call(zoom);
 
-		
+		this.container = container;
 		this.target = target;
 		this.queue = queue;
 		this.queueData = queueData;
@@ -38,6 +38,49 @@
 		this.rectWidth = rectWidth;
 		this.rectHeight = rectHeight;
 		this.padding = padding;
+		
+		
+		var that = this;
+		this.mouseOver = function (d,i) {
+			
+			d3.select("#rectIdx"+i)
+				.attr("fill","#FA812F")
+				.attr("width", that.rectWidth*1.1)
+				.attr("height", that.rectHeight*1.1)
+				.attr("transform","translate("+(-that.rectHeight*0.05)+","+(-that.rectWidth*0.05)+")");
+
+			
+			that.queue.append("text")
+				.text("↑")
+				.attr("font-family","Consolas")
+				.attr("font-size","20px")
+				.attr("fill","black")
+				.attr("text-anchor","middle")
+				.attr("id","arrow")
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.front+i) +that.rectWidth/2;})
+				.attr("y",function(){return 300+that.rectHeight*1.3;})
+			
+			that.queue.append("text")
+				.text(function(){return "queue["+(that.front+i)+"] = "+ that.queueData[i];})
+				.attr("font-family","Consolas")
+				.attr("font-size","20px")
+				.attr("fill","black")
+				.attr("text-anchor","middle")
+				.attr("id","arrInfo")
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.front+i) +that.rectWidth/2;})
+				.attr("y",function(){return 300+that.rectHeight*1.6;})
+		};
+
+		this.mouseOut = function (d,i) {
+			d3.select(this)
+				.attr("fill","#FAAF08")
+				.attr("width",that.rectWidth)
+				.attr("height",that.rectHeight)
+				.attr("transform","translate(0,0)");
+
+			d3.select("#arrInfo").remove();
+			d3.select("#arrow").remove();
+		};
   }
 
   Queue.prototype.Push = function (_value) {
@@ -48,6 +91,7 @@
 		
 		var position = (this.rectWidth+this.padding)*(this.rear-1)+100;
 		var distance = 300;
+		var that = this;
 		newElem = this.container.append("g");
 		newElem.append("rect")
 			.attr("x", position + distance)
@@ -60,8 +104,8 @@
 
 		newElem.append("text")
 			.text(_value)
-			.attr("x",function(){return position+distance+this.rectWidth/2;})
-		 	.attr("y",function(){return 300+this.rectHeight/5*3;})
+			.attr("x",function(){return position+distance+that.rectWidth/2;})
+		 	.attr("y",function(){return 300+that.rectHeight/5*3;})
 			.attr("fill","black")
 			.attr("font-family","Consolas")
 			.attr("font-size","20px")
@@ -69,12 +113,15 @@
 					
 		newElem.transition().duration(300)
 			.attr("transform","translate("+(-distance)+",0)").ease(d3.easeSinOut);
-					
-		newElem.remove().exit();
-		this.drawQueue();
+		
+		setTimeout(function(){
+			newElem.remove().exit();
+			that.drawQueue();
+		},300);			
   };
 
   Queue.prototype.Pop = function () {
+		var that = this;
     if(this.front == this.rear)
 			return ;
 
@@ -83,7 +130,7 @@
 
 		this.front++;
 		
-		this.queueData = queueData.slice(1,this.queueData.length);
+		this.queueData = this.queueData.slice(1,this.queueData.length);
 		
 		this.drawQueue();
 				
@@ -102,8 +149,8 @@
 
 		newElem.append("text")
 			.text(_value)
-			.attr("x",function(){return position + this.rectWidth/2;})
-		 	.attr("y",function(){return 300 + this.rectHeight/5*3;})
+			.attr("x",function(){return position + that.rectWidth/2;})
+		 	.attr("y",function(){return 300 + that.rectHeight/5*3;})
 			.attr("fill","black")
 			.attr("font-family","Consolas")
 			.attr("font-size","20px")
@@ -113,11 +160,65 @@
 		newElem.transition().duration(300)
 			.attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
 								
-		newElem.remove().exit();
-		this.drawQueue();
+		setTimeout(function(){
+			newElem.remove().exit();
+			that.drawQueue();
+		},300);			
+  };
+	
+	Queue.prototype.Clear = function () {
+		
+    if(this.front == this.rear)
+			return ;
+		while(this.front != this.rear)
+		{
+			var that = this;
+			var newElem;
+			var _value = this.queueData[0];
+
+			this.front++;
+			
+			this.queueData = this.queueData.slice(1,this.queueData.length);
+			
+			this.drawQueue();
+					
+			var position = (this.rectWidth + this.padding)*(this.front-1)+100;
+			var distance = 300;
+
+			newElem = this.container.append("g");
+			 newElem.append("rect")
+				.attr("x", position)
+				.attr("y",300)
+				.attr("width", this.rectWidth)
+				.attr("height", this.rectHeight)
+				.attr("fill","#FAAF08")
+				.attr("rx",10)
+				.attr("ry",10);
+
+			newElem.append("text")
+				.text(_value)
+				.attr("x",function(){return position + that.rectWidth/2;})
+				.attr("y",function(){return 300 + that.rectHeight/5*3;})
+				.attr("fill","black")
+				.attr("font-family","Consolas")
+				.attr("font-size","20px")
+				.attr("text-anchor","middle");
+			
+			//var distance = -300;
+			newElem.transition().duration(300)
+				.attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
+									
+			//setTimeout(function(){
+				newElem.remove().exit();
+				that.drawQueue();
+			//},300);			
+		}
+		
   };
 
   Queue.prototype.drawQueue = function () {
+		var that = this;
+		
     if(this.queue !== undefined){
 			this.queue.remove().exit();
 		}
@@ -130,7 +231,7 @@
 			.data(this.queueData)
 			.enter()
 			.append("rect")
-			.attr("x",function(d,i){return 100+(this.rectWidth+this.padding)*(this.front+i);})
+			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(that.front+i);})
 			.attr("y",300)
 			.attr("width", this.rectWidth)
 			.attr("height", this.rectHeight)
@@ -147,8 +248,8 @@
 			.enter()
 			.append("text")
 			.text(function(d,i){return d;})
-			.attr("x",function(d,i){return 100+(this.rectWidth+this.padding)*(this.front+i) +this.rectWidth/2;})
-		 	.attr("y",function(){return 300+this.rectHeight/5*3;})
+			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(that.front+i) +that.rectWidth/2;})
+		 	.attr("y",function(){return 300+that.rectHeight/5*3;})
 			.attr("fill","black")
 			.attr("font-family","Consolas")
 			.attr("font-size","20px")
@@ -161,8 +262,8 @@
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(this.rectWidth+this.padding)*this.front +this.rectWidth/2;})
-			.attr("y",function(){return 300-this.rectHeight*0.2;})
+			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
+			.attr("y",function(){return 300-that.rectHeight*0.2;})
 		
 		this.queue.append("text")
 			.text("front")
@@ -170,8 +271,8 @@
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(this.rectWidth+this.padding)*this.front +this.rectWidth/2;})
-			.attr("y",function(){return 300-this.rectHeight*0.5;})
+			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
+			.attr("y",function(){return 300-that.rectHeight*0.5;})
 	
 
 		this.queue.append("text")
@@ -180,8 +281,8 @@
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(this.rectWidth+this.padding)*this.rear +this.rectWidth/2;})
-			.attr("y",function(){return 300-this.rectHeight*0.2;})
+			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.rear +that.rectWidth/2;})
+			.attr("y",function(){return 300-that.rectHeight*0.2;})
 		
 		this.queue.append("text")
 			.text("rear")
@@ -189,48 +290,8 @@
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(this.rectWidth+this.padding)*this.rear +this.rectWidth/2;})
-			.attr("y",function(){return 300-this.rectHeight*0.5;})
-  };
-
-  Queue.prototype.mouseOver = function (d,i) {
-    d3.select("#rectIdx"+i)
-			.attr("fill","#FA812F")
-			.attr("width", this.rectWidth*1.1)
-			.attr("height", this.rectHeight*1.1)
-			.attr("transform","translate("+(-this.rectHeight*0.05)+","+(-this.rectWidth*0.05)+")");
-
-		
-		this.queue.append("text")
-			.text("↑")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("fill","black")
-			.attr("text-anchor","middle")
-			.attr("id","arrow")
-			.attr("x",function(){return 100+(this.rectWidth+this.padding)*(this.front+i) +this.rectWidth/2;})
-			.attr("y",function(){return 300+this.rectHeight*1.3;})
-		
-		this.queue.append("text")
-			.text(function(){return "queue["+(this.front+i)+"] = "+ this.queueData[i];})
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("fill","black")
-			.attr("text-anchor","middle")
-			.attr("id","arrInfo")
-			.attr("x",function(){return 100+(this.rectWidth+this.padding)*(this.front+i) +this.rectWidth/2;})
-			.attr("y",function(){return 300+this.rectHeight*1.6;})
-  };
-
-  Queue.prototype.mouseOut = function (d,i) {
-    d3.select(this)
-			.attr("fill","#FAAF08")
-			.attr("width",this.rectWidth)
-			.attr("height",this.rectHeight)
-			.attr("transform","translate(0,0)");
-
-		d3.select("#arrInfo").remove();
-		d3.select("#arrow").remove();
+			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.rear +that.rectWidth/2;})
+			.attr("y",function(){return 300-that.rectHeight*0.5;})
   };
 
   window.thisplay.Queue = Queue;
