@@ -24,7 +24,7 @@
   },
   "jspm": {
     "dependencies": {
-      "d3": "npm:d3@^4.2.2"
+      "d3": "npm:d3@4.2.2"
     },
     "shim": {
       "thisplay": {
