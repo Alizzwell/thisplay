@@ -23,8 +23,11 @@
     "grunt-contrib-uglify": "^2.0.0"
   },
   "jspm": {
+    "dependencies": {
+      "d3": "npm:d3@^4.2.2"
+    },
     "shim": {
-      "alizzwell/thisplay": {
+      "thisplay": {
         "deps": ["d3"],
         "exports": "d3"
       }
