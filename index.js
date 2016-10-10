@@ -1,3 +1,3 @@
 require('./dist/thisplay.min');
 
-module.export = thisplay;
+module.exports = thisplay;
