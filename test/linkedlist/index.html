@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Linked List</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=11" />
+  <meta charset="UTF-8" />
+
+  <style>
+    input {width: 100px;}
+
+    .test_svg {
+      width: 800px;
+      height: 450px;
+      border: 1px solid black;
+    }
+  </style>
+  <link rel="stylesheet" href="../../src/linkedlist/linkedlist.css" />
+
+  <script src="../../bower_components/d3/d3.js"></script>
+  <script src="../../src/core.js"></script>
+  <script src="../../src/linkedlist/linkedlist.js"></script>
+</head>
+
+<body>
+  <svg class="test_svg" id="canvas" />
+  <hr/>
+
+  <button onClick="btnAddNodeClk()">addNode</button>
+  <input type="text" id="addNode_idx" placeholder="idx" />
+  <input type="text" id="addNode_val" placeholder="val" />
+  <p/>
+  <button onClick="btnDeleteNodeClk()">deleteNode</button>
+  <input type="text" id="deleteNode_idx" placeholder="idx" />
+  <p/>
+  <button onClick="btnSetDataClk()">setData</button>
+  <input type="text" id="setData_idx" placeholder="idx" />
+  <input type="text" id="setData_val" placeholder="val" />
+  <p/>
+  <button onClick="btnHighlight()">highlight</button>
+  <input type="text" id="highlight_idx" placeholder="idx" />
+  <p/>
+  <button onClick="btnUnHighlight()">unhighlight</button>
+  <input type="text" id="unhighlight_idx" placeholder="idx" />
+  <p/>
+  <button onClick="btnClearClk()">clear</button>
+  <p/>
+
+  <script>
+    var linkedList = new thisplay.LinkedList('#canvas');
+
+    function btnAddNodeClk() {
+      var idx = document.getElementById('addNode_idx').value;
+      var val = document.getElementById('addNode_val').value;
+      linkedList.addNode(Number(idx), Number(val));
+    }
+
+    function btnDeleteNodeClk() {
+      var idx = document.getElementById('deleteNode_idx').value;
+      linkedList.deleteNode(Number(idx));
+    }
+
+    function btnSetDataClk() {
+      var idx = document.getElementById('setData_idx').value;
+      var val = document.getElementById('setData_val').value;
+      linkedList.setData(Number(idx), Number(val));
+    }
+
+    function btnHighlight() {
+      var idx = document.getElementById('highlight_idx').value;
+      linkedList.highlight(Number(idx));
+    }
+
+    function btnUnHighlight() {
+      var idx = document.getElementById('unhighlight_idx').value;
+      if (!idx) {
+        linkedList.unhighlight();
+      } else {
+        linkedList.unhighlight(Number(idx));
+      }
+    }
+
+    function btnClearClk() {
+      linkedList.clear();
+    }
+  </script>
+</body>
+
+</html>
