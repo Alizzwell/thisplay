@@ -31,40 +31,62 @@
     this.rectWidth = 0;
     this.padding = 0;
 
+    var that = this;
+    
+    this.mouseOver = function(d,i){
+      console.log("mouseOver"+i);
+      d3.select("#elemIdx_"+i)
+        //.attr("temp",function(){console.log(i);})
+        .attr("fill","#9598AB")
+        .attr("width",that.rectWidth*1.1)
+        .attr("height",that.rectHeight*1.1)
+        .attr("transform","translate("+(-that.rectWidth*0.05)+","+(-that.rectHeight*0.05)+")");
+
+
+      that.svg.append("text")
+      .text("←")
+      .attr("font-family","Consolas")
+      .attr("font-size",parseInt(that.rectHeight / 2))
+      .attr("fill",that.data[i].color)
+      .attr("text-anchor","middle")
+      .attr("id","arrow")
+      .attr("x", that.width/2+that.rectWidth/2 + 10)
+      .attr("y",that.height-(that.rectHeight+that.padding)*(i+1)+that.rectHeight/3*2);
+      
+
+      that.svg.append("text")
+          .text(function(){return "stack["+i+"] = " + that.data[i].text;})
+          .attr("x", that.width/2+ that.rectWidth/2 + 10 + parseInt(that.rectHeight / 2))
+          .attr("y",that.height-(that.rectHeight+that.padding)*(i+1)+that.rectHeight/3*2)
+          .attr("font-family","Consolas")
+          .attr("font-size",parseInt(that.rectHeight / 2))
+          .attr("fill",that.data[i].color)
+          //.attr("text-anchor","middle")
+          .attr("id","stackInfo")
+    };
+
+    this.mouseOut = function(d,i){
+
+      d3.select(this)
+         .attr("fill",that.data[i].background)
+         .attr("width",that.rectWidth)
+         .attr("height",that.rectHeight)
+         .attr("transform","translate(0,0)");
+      
+      d3.select("#arrow").remove();
+      d3.select("#stackInfo").remove();
+    };
+
   }
 
   Stack.prototype.init = function (size) {
     this.top = -1;
-    //this.data = new Array(size);
     this.rectWidth = Math.ceil(this.width/10);
     this.rectHeight = Math.ceil(this.height/(size+size/10));
 
     this.padding = this.rectHeight/10;
 
-    // for(var i = 0; i < size; i ++){
-    //   this.data[i] = {
-    //     text:"",
-    //     color:"#000000",
-    //     background:"#BCBABE"
-    //   };
-    // }
-
-    // this.h = new Array(size);
-    // this.data.fill(0);
-    // this.h.fill(0);
-
-    // var x = d3.scaleBand()
-    //   .range([0, this.width])
-    //   .padding(0.1);
-    // var y = d3.scaleLinear()
-    //   .range([this.height, 0]);
-
-    // x.domain(this.data.map(function (d, i) { return i; }));
-
-    // this.x = x;
-    // this.y = y;
-
-    //this.redrawStack();
+   
   };
 
   Stack.prototype.redrawStack = function () {
@@ -83,8 +105,10 @@
       .data(this.data)
       .enter()
       .append("g")
-      .attr("class", "elem")
-      .attr("id", function (d, i) { return "elemIdx_" + i;})
+      //.attr("id", function (d, i) { return "elemIdx_" + i;})
+      .attr("class", "elem");
+      
+      
       
     cells.append("rect")
       .attr("fill", function (d) { return d.background;})
@@ -93,7 +117,11 @@
       .attr("width", rectWidth)
       .attr("height", rectHeight)
       .attr("rx",2)
-      .attr("ry",2);
+      .attr("ry",2)
+      .attr("id", function (d, i) { return "elemIdx_" + i;})
+      .on("mouseover",this.mouseOver)
+      .on("mouseout",this.mouseOut);
+      
 
     cells.append("text")
       .attr("x", that.width/2)
