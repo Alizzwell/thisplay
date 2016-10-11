@@ -32,5 +32,8 @@
         "exports": "d3"
       }
     }
-  }
+  },
+  "ignore": [
+    ".bowerrc"
+  ]
 }
