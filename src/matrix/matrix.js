@@ -1,9 +1,7 @@
-;(function (window, d3) {
+;(function (thisplay, d3) {
 	'use strict';
 
 	function Matrix(target) {
-    d3 = d3 || window.d3;
-
     var svg = d3.select(target).append("g")
       .attr("class", "thisplay-matrix")
       .attr("transform", "translate(25, 25)");
@@ -142,6 +140,6 @@
       });
   };
 
-	window.thisplay.Matrix = Matrix;
+  thisplay.Matrix = Matrix;
 
-})(window, window.d3);
+})(thisplay, d3);

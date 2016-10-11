@@ -1,10 +1,8 @@
-;(function (window, d3) {
+;(function (thisplay, d3) {
 	'use strict';
 
 
 	function Chart(target) {
-    d3 = d3 || window.d3;
-
     var svg = d3.select(target).append("g")
       .attr("class", "thisplay-chart")
       .attr("transform", "translate(25, 25)");
@@ -147,6 +145,6 @@
     });
   };
 
-  window.thisplay.Chart = Chart;
+  thisplay.Chart = Chart;
 
-})(window, window.d3);
+})(thisplay, d3);
