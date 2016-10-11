@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Queue</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=11" />
+  <meta charset="UTF-8" />
+
+  <link rel="stylesheet" href="../../src/chart/chart.css" />
+
+  <script src="../../bower_components/d3/d3.js"></script>
+  <script src="../../src/core.js"></script>
+  <script src="../../src/queue/queue.js"></script>
+</head>
+
+<body>
+  <div id = "section1"></div>
+  <hr/>
+
+  <button onClick="btnPushClk()">Push</button>
+  <input type="text" id="pushValue" placeholder="value" />
+  <p/>
+  <button onClick="btnPopClk()">Pop</button>
+  <p/>
+  <button onClick="btnClearClk()">Clear</button>
+  <p/>
+
+  <script>
+    var queue = new thisplay.Queue('#section1');
+
+    function btnPushClk() {
+      var value = document.getElementById('pushValue').value;
+      queue.Push(Number(value));
+    }
+
+    function btnPopClk() {
+      queue.Pop();
+    }
+		
+		function btnClearClk() {
+      queue.Clear();
+    }
+  </script>
+</body>
+
+</html>
