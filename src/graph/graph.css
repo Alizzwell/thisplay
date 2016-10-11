@@ -1,53 +1,53 @@
-.node {
+.thisplay-graph .node {
 	fill: black;
 	stroke: white;
 	stroke-width : 3px;
 }
 
-.node_selected {
+.thisplay-graph .node_selected {
 	fill : red;
 	stroke : black;
 }
 
-.linktext{
+.thisplay-graph .linktext{
 	fill: black;
 	text-align: center;
 	font-size: 20px;
 	font: arial;
 	text-anchor: middle;
-	vertical-align: middle;	
+	vertical-align: middle;
 	font-weight : 900;
 }
 
-.nodetext{
+.thisplay-graph .nodetext{
 	fill: white;
 	text-align: center;
 	font-size: 	30px;
 	font: sans-serif;
 	text-anchor: middle;
-	vertical-align: middle;	
+	vertical-align: middle;
 	font-weight : 900;
 }
 
-.nodetext_selected {
+.thisplay-graph .nodetext_selected {
 	fill: #0010f0;
 	font-size = 50px;
 	text-anchor: middle;
-	vertical-align: text-bottom;	
+	vertical-align: text-bottom;
 }
 
-.link {
+.thisplay-graph .link {
   stroke: #999;
   stroke-width: 5;
   cursor: crosshair;
 }
 
-.path {
+.thisplay-graph .path {
   stroke: #999;
   stroke-width: 5;
   cursor: crosshair;
 }
 
-.link_selected {
+.thisplay-graph .link_selected {
   stroke: #ff7f0e;
 }
