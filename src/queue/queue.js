@@ -1,9 +1,7 @@
-;(function (window, d3) {
+;(function (thisplay, d3) {
 	'use strict';
 
 	function Queue(target) {
-    d3 = d3 || window.d3;
-		
 		var queue;
 		var queueData = [];
 		var front = 0;
@@ -38,18 +36,18 @@
 		this.rectWidth = rectWidth;
 		this.rectHeight = rectHeight;
 		this.padding = padding;
-		
-		
+
+
 		var that = this;
 		this.mouseOver = function (d,i) {
-			
+
 			d3.select("#rectIdx"+i)
 				.attr("fill","#FA812F")
 				.attr("width", that.rectWidth*1.1)
 				.attr("height", that.rectHeight*1.1)
 				.attr("transform","translate("+(-that.rectHeight*0.05)+","+(-that.rectWidth*0.05)+")");
 
-			
+
 			that.queue.append("text")
 				.text("↑")
 				.attr("font-family","Consolas")
@@ -57,17 +55,17 @@
 				.attr("fill","black")
 				.attr("text-anchor","middle")
 				.attr("id","arrow")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.front+i) +that.rectWidth/2;})
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
 				.attr("y",function(){return 300+that.rectHeight*1.3;})
-			
+
 			that.queue.append("text")
-				.text(function(){return "queue["+(that.front+i)+"] = "+ that.queueData[i];})
+				.text(function(){return "queue["+(i)+"] = "+ that.queueData[i];})
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
 				.attr("text-anchor","middle")
 				.attr("id","arrInfo")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.front+i) +that.rectWidth/2;})
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
 				.attr("y",function(){return 300+that.rectHeight*1.6;})
 		};
 
@@ -88,8 +86,8 @@
 
 		this.rear++;
 		this.queueData.push(_value);
-		
-		var position = (this.rectWidth+this.padding)*(this.rear-1)+100;
+
+		var position = (this.rectWidth+this.padding)*((this.rear-this.front)-1)+100;
 		var distance = 300;
 		var that = this;
 		newElem = this.container.append("g");
@@ -110,14 +108,14 @@
 			.attr("font-family","Consolas")
 			.attr("font-size","20px")
 			.attr("text-anchor","middle");
-					
+
 		newElem.transition().duration(300)
 			.attr("transform","translate("+(-distance)+",0)").ease(d3.easeSinOut);
-		
+
 		setTimeout(function(){
 			newElem.remove().exit();
 			that.drawQueue();
-		},300);			
+		},300);
   };
 
   Queue.prototype.Pop = function () {
@@ -129,12 +127,12 @@
 		var _value = this.queueData[0];
 
 		this.front++;
-		
+
 		this.queueData = this.queueData.slice(1,this.queueData.length);
-		
+
 		this.drawQueue();
-				
-		var position = (this.rectWidth + this.padding)*(this.front-1)+100;
+
+		var position = (this.rectWidth + this.padding)*(-1)+100;
 		var distance = 300;
 
 		newElem = this.container.append("g");
@@ -155,19 +153,19 @@
 			.attr("font-family","Consolas")
 			.attr("font-size","20px")
 			.attr("text-anchor","middle");
-		
+
 		//var distance = -300;
 		newElem.transition().duration(300)
 			.attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
-								
+
 		setTimeout(function(){
 			newElem.remove().exit();
 			that.drawQueue();
-		},300);			
+		},300);
   };
-	
+
 	Queue.prototype.Clear = function () {
-		
+
     if(this.front == this.rear)
 			return ;
 		while(this.front != this.rear)
@@ -177,12 +175,12 @@
 			var _value = this.queueData[0];
 
 			this.front++;
-			
+
 			this.queueData = this.queueData.slice(1,this.queueData.length);
-			
+
 			this.drawQueue();
-					
-			var position = (this.rectWidth + this.padding)*(this.front-1)+100;
+
+			var position = (this.rectWidth + this.padding)*(-1)+100;
 			var distance = 300;
 
 			newElem = this.container.append("g");
@@ -203,22 +201,22 @@
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("text-anchor","middle");
-			
+
 			//var distance = -300;
 			newElem.transition().duration(300)
 				.attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
-									
+
 			//setTimeout(function(){
 				newElem.remove().exit();
 				that.drawQueue();
-			//},300);			
+			//},300);
 		}
-		
+
   };
 
   Queue.prototype.drawQueue = function () {
 		var that = this;
-		
+
     if(this.queue !== undefined){
 			this.queue.remove().exit();
 		}
@@ -231,7 +229,7 @@
 			.data(this.queueData)
 			.enter()
 			.append("rect")
-			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(that.front+i);})
+			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(i);})
 			.attr("y",300)
 			.attr("width", this.rectWidth)
 			.attr("height", this.rectHeight)
@@ -248,7 +246,7 @@
 			.enter()
 			.append("text")
 			.text(function(d,i){return d;})
-			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(that.front+i) +that.rectWidth/2;})
+			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
 		 	.attr("y",function(){return 300+that.rectHeight/5*3;})
 			.attr("fill","black")
 			.attr("font-family","Consolas")
@@ -262,18 +260,18 @@
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
+			.attr("x",function(){return 100 +that.rectWidth/2;})
 			.attr("y",function(){return 300-that.rectHeight*0.2;})
-		
+
 		this.queue.append("text")
 			.text("front")
 			.attr("font-family","Consolas")
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
+			.attr("x",function(){return 100 +that.rectWidth/2;})
 			.attr("y",function(){return 300-that.rectHeight*0.5;})
-	
+
 
 		this.queue.append("text")
 			.text("▼")
@@ -281,19 +279,19 @@
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.rear +that.rectWidth/2;})
+			.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
 			.attr("y",function(){return 300-that.rectHeight*0.2;})
-		
+
 		this.queue.append("text")
 			.text("rear")
 			.attr("font-family","Consolas")
 			.attr("font-size","20px")
 			.attr("fill","black")
 			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.rear +that.rectWidth/2;})
+			.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
 			.attr("y",function(){return 300-that.rectHeight*0.5;})
   };
 
-  window.thisplay.Queue = Queue;
+  thisplay.Queue = Queue;
 
-})(window, window.d3);
+})(thisplay, d3);
