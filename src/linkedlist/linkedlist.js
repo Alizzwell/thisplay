@@ -11,8 +11,8 @@
 
     var width = 300;
     var height = 200;
-    var data = [];
-    var h = [];
+    var data = ["head"];
+    var cur = 0;
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -21,14 +21,62 @@
       });
 
     d3.select(target).call(zoom);
+    
+    svg.append('defs').append('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '0 -10 20 20')
+      .attr('refX', 6)
+      .attr('markerWidth', 3)
+      .attr('markerHeight', 3)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr("d", "M0,10 L10,0 L0,-10")
+        .attr('fill', '#000');
 
 
     this.svg = svg;
     this.width = width;
     this.height = height;
     this.data = data;
-    this.h = h;
+    this.cur = cur;
+    
+    this.redraw();
+    this.colorCur();
   }
+  
+  LinkedList.prototype.colorCur = function() {
+    var that = this;
+    this.svg.selectAll(".node")
+      .style("fill", function(d, i) { return i === that.cur ? "orange" : "white"; });
+  };
+  
+  LinkedList.prototype.curInit = function() {
+    this.cur = 0;
+    this.colorCur();
+  };
+  
+  LinkedList.prototype.next = function() {
+    if (this.cur < this.data.length - 1) {
+      this.cur++;
+      this.colorCur();
+    }
+  };
+  
+  LinkedList.prototype.insertCur = function(val) {
+    if (this.cur >= this.data.length)
+      return;
+    this.addNode(this.cur + 1, val);
+  };
+  
+  LinkedList.prototype.deleteCur = function() {
+    if (this.cur === 0 || this.cur >= this.data.length)
+      return;
+    this.deleteNode(this.cur);
+  };
+  
+  LinkedList.prototype.setDataCur = function(val) {
+    this.setData(this.cur, val);
+  };
 
   LinkedList.prototype.addNode = function(idx, val) {
     // if (idx < 0 || this.data.length < idx) {
@@ -41,10 +89,12 @@
     
     if (this.data.length === idx || this.data.length === 0) {
       this.addNodeAniOpacity(idx, val, duration);
+      setTimeout(function () { that.colorCur(); }, duration);
     }
     else {
       this.addNodeAniMove(idx, val, duration);
       setTimeout(function() { that.addNodeAniOpacity(idx, val, duration); }, duration);
+      setTimeout(function() { that.colorCur(); }, duration * 2);
     }
   };
   
@@ -53,15 +103,26 @@
     this.svg.selectAll(".node")
       .transition().duration(dur)
       .attr("x", function(d, i) {
-        if (i < idx)  return i * 50;
-        else          return (i + 1) * 50;
+        if (i < idx)  return i * 80;
+        else          return (i + 1) * 80;
       });
       
     this.svg.selectAll(".text")
       .transition().duration(dur)
       .attr("x", function(d, i) { 
-        if (i < idx)  return i * 50 + 15;
-        else          return (i + 1) * 50 + 15;
+        if (i < idx)  return i * 80 + 15;
+        else          return (i + 1) * 80 + 15;
+      });
+      
+    this.svg.selectAll(".arrow")
+      .transition().duration(dur)
+      .attr("transform", function(d, i) { 
+        if (i < idx) {
+          return "translate(" + (i * 80) + ",15)" 
+        }
+        else {
+          return "translate(" + ((i + 1) * 80) + ",15)" 
+        }
       });
   };
   
@@ -69,7 +130,6 @@
     // idx의 노드를 opacity 0에서 1로 변경
     
     this.data.splice(idx, 0, val);
-    this.h.splice(idx, 0, 0);
     this.redraw();
     
     this.svg.selectAll(".node")
@@ -101,8 +161,8 @@
     var that = this;
     setTimeout(function() {
         that.data.splice(idx, 1);
-        that.h.splice(idx, 1);
         that.redraw();
+        that.colorCur();
       }, delay);
   }
   
@@ -110,15 +170,26 @@
     this.svg.selectAll(".node")
       .transition().duration(dur)
       .attr("x", function(d, i) {
-        if (i > idx)  return (i - 1) * 50;
-        else          return i * 50;
+        if (i > idx)  return (i - 1) * 80;
+        else          return i * 80;
       });
       
     this.svg.selectAll(".text")
       .transition().duration(dur)
       .attr("x", function(d, i) { 
-        if (i > idx)  return (i - 1) * 50 + 15;
-        else          return i * 50 + 15;
+        if (i > idx)  return (i - 1) * 80 + 15;
+        else          return i * 80 + 15;
+      });
+      
+    this.svg.selectAll(".arrow")
+      .transition().duration(dur)
+      .attr("transform", function(d, i) { 
+        if (i >= idx) {
+          return "translate(" + ((i - 1) * 80) + ",15)" 
+        }
+        else {
+          return "translate(" + (i * 80) + ",15)" 
+        }
       });
   };
   
@@ -129,46 +200,44 @@
     this.svg.selectAll(".text")
       .transition().duration(dur)
       .attr("opacity", function(d, i) { return i === idx ? 0 : 1; });
+    this.svg.selectAll(".arrow")
+      .transition().duration(dur)
+      .attr("opacity", function(d, i) { return i === idx ? 0 : 1; });
   };
 
   LinkedList.prototype.setData = function (idx, val) {
-    var that = this;
     this.data[idx] = val;
     
     this.svg.selectAll(".text")
       .data(this.data)
       .text(function(d) { return d; });
   };
-
+  
   LinkedList.prototype.clear = function () {
+    this.clearSVG();
+    
+    this.data = ["head"];
+    this.cur = 0;
+    
+    this.redraw();
+    this.colorCur();
+  };
+
+  LinkedList.prototype.clearSVG = function () {
     this.svg.selectAll(".node").remove();
     this.svg.selectAll(".text").remove();
-  };
-
-  LinkedList.prototype.highlight = function (idx) {
-    this.h[idx] = 1;
-    this.reColoring();
-  };
-
-  LinkedList.prototype.unhighlight = function (idx) {
-    if (idx === undefined) {
-      this.h.fill(0);
-    }
-    else {
-      this.h[idx] = 0;
-    }
-    this.reColoring();
+    this.svg.selectAll(".arrow").remove();
   };
 
   LinkedList.prototype.redraw = function () {
     var that = this;
-    this.clear();
+    this.clearSVG();
     
     this.svg.selectAll(".node")
       .data(this.data)
       .enter().append("rect")
       .attr("class", "node")
-      .attr("x", function(d, i) { return i * 50; })
+      .attr("x", function(d, i) { return i * 80; })
       .attr("y", 0)
       .attr("width", 30)
       .attr("height", 30)
@@ -178,23 +247,22 @@
       .data(this.data)
       .enter().append("text")
       .attr("class", "text")
-      .attr("x", function(d, i) { return i * 50 + 15; })
+      .attr("x", function(d, i) { return i * 80 + 15; })
       .attr("y", 15)
       .attr("text-anchor", "middle")
       .attr("alignment-baseline", "central")
       .attr("opacity", 1)
       .text(function(d) { return d; });
       
-    this.reColoring();
-  };
-
-
-  LinkedList.prototype.reColoring = function () {
-    var self = this;
-    this.svg.selectAll(".node")
-      .style("fill", function (d, i) {
-        if (self.h[i] === 1) return 'red';
-      });
+    this.svg.selectAll(".arrow").data(this.data.slice(0, -1))
+      .enter().append("path")
+      .attr("class", "arrow")
+      .attr("transform", function(d, i) { return "translate(" + (i * 80) + ",15)" })
+      .attr("d", "M40,0 L70,0")
+      .style("marker-end", "url(#arrow)")
+      .style("stroke", "black")
+      .style("stroke-width", "3px")
+      .attr("opacity", 1);
   };
 
   window.thisplay.LinkedList = LinkedList;

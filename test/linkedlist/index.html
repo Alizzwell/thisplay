@@ -24,6 +24,19 @@
 <body>
   <svg class="test_svg" id="canvas" />
   <hr/>
+  
+  <button onClick="btnCurInit()">curInit</button>
+  <p/>
+  <button onClick="btnNext()">next</button>
+  <p/>
+  <button onClick="btnInsertCur()">insertCur</button>
+  <input type="text" id="insertCur_val" placeholder="val" />
+  <p/>
+  <button onClick="btnDeleteCur()">deleteCur</button>
+  <p/>
+  <button onClick="btnSetDataCur()">setDataCur</button>
+  <input type="text" id="setDataCur_val" placeholder="val" />
+  <p/>
 
   <button onClick="btnAddNodeClk()">addNode</button>
   <input type="text" id="addNode_idx" placeholder="idx" />
@@ -36,17 +49,33 @@
   <input type="text" id="setData_idx" placeholder="idx" />
   <input type="text" id="setData_val" placeholder="val" />
   <p/>
-  <button onClick="btnHighlight()">highlight</button>
-  <input type="text" id="highlight_idx" placeholder="idx" />
-  <p/>
-  <button onClick="btnUnHighlight()">unhighlight</button>
-  <input type="text" id="unhighlight_idx" placeholder="idx" />
-  <p/>
   <button onClick="btnClearClk()">clear</button>
   <p/>
 
   <script>
     var linkedList = new thisplay.LinkedList('#canvas');
+    
+    function btnCurInit() {
+      linkedList.curInit();
+    }
+    
+    function btnNext() {
+      linkedList.next();
+    }
+    
+    function btnInsertCur() {
+      var val = document.getElementById('insertCur_val').value;
+      linkedList.insertCur(Number(val));
+    }
+    
+    function btnDeleteCur() {
+      linkedList.deleteCur();
+    }
+    
+    function btnSetDataCur() {
+      var val = document.getElementById('setDataCur_val').value;
+      linkedList.setDataCur(Number(val));
+    }
 
     function btnAddNodeClk() {
       var idx = document.getElementById('addNode_idx').value;
