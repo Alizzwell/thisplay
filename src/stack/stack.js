@@ -12,7 +12,7 @@
     var width = 500;
     var height = 300;
     var data = [];
-   // var h = [];
+
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -30,7 +30,7 @@
     this.rectHeight = 0;
     this.rectWidth = 0;
     this.padding = 0;
-  //  this.h = h;
+
   }
 
   Stack.prototype.init = function (size) {
@@ -82,9 +82,11 @@
     var cells = ele.selectAll(".elem")
       .data(this.data)
       .enter()
-      .append("rect")
+      .append("g")
       .attr("class", "elem")
       .attr("id", function (d, i) { return "elemIdx_" + i;})
+      
+    cells.append("rect")
       .attr("fill", function (d) { return d.background;})
       .attr("x", that.width/2-rectWidth/2)
       .attr("y", function(d,i){return that.height-(rectHeight+that.padding)*(i+1);})
@@ -94,53 +96,90 @@
       .attr("ry",2);
 
     cells.append("text")
-      .attr("x", this.width/2)
-      .attr("y",  function(d,i){return that.height-(rectHeight+that.padding)*(i+1) + rectHeight / 2;})
+      .attr("x", that.width/2)
+      .attr("y", function(d,i){return that.height-(rectHeight+that.padding)*(i+1)+rectHeight/3*2;})
       .attr("text-anchor", "middle")
-     // .attr("font-size", parseInt(rectHeight / 3) + "px")
-      .attr("dy", ".35em")
-      // .attr("width", rectWidth)
-      // .attr("height", rectHeight)
-      .attr("fill", function (d) { return "black"; })
-      .text(function (d) { console.log(d.text); return d.text; });
+    //  .attr("dy", ".35em")
+      .attr("font-size", parseInt(rectHeight / 3) )
+      .attr("fill", function (d) { return d.color; })
+      .text(function (d) {  return d.text; });
   };
   
   Stack.prototype.push = function(val) {
     this.top++;
     this.data[this.top] = {
         text:val,
-        color:"#000000",
-        background:"#BCBABE"
+        color:"#4F474A",
+        background:"#FFA4A7"
       };
-  //  this.data[this.top].text = val;
+
     this.svg.select("#elemIdx_" + this.top + " text").text(val);
     var distance = (this.height-(this.rectHeight+this.padding)*(this.top+1))-this.rectHeight;
     var newElem = this.svg.append("g");
     var that = this;
+    var fontSize = parseInt(that.rectHeight / 3);
 
-    console.log(distance);
+
     newElem.append("rect")
             .attr("x",this.width/2-this.rectWidth/2)
             .attr("y",this.rectHeight)
             .attr("width",this.rectWidth)
             .attr("height",this.rectHeight)
-            .attr("fill","#BCBABE")
+            .attr("fill",this.data[this.top].background)
             .attr("rx",2)
             .attr("ry",2);
 
     newElem.append("text")
             .text(val)
             .attr("x",that.width/2)
-            .attr("y",that.rectHeight/2*3)
-            .attr("fill","black");
+            .attr("y",that.rectHeight/3*2 + that.rectHeight)
+            .attr("text-anchor", "middle")
+            .attr("font-size", parseInt(that.rectHeight / 3) )
+            .attr("fill",this.data[this.top].color);
     
     
     newElem.transition()
-            .attr("transform","translate(0,"+distance+")").duration(500).ease(d3.easeElasticOut);
+            .attr("transform","translate(0,"+distance+")").duration(500).ease(d3.easeSinOut);
 
     setTimeout(function(){
       newElem.remove().exit();
       that.redrawStack();
+    },300);
+  };
+
+  Stack.prototype.pop = function(){
+    var top = this.top;
+    var val = this.data[top];
+    var newElem = this.svg.append("g");
+    var that = this;
+    var distance = that.rectHeight-(that.height-(that.rectHeight+that.padding)*top);
+    this.data.pop();
+    this.top--;
+    console.log("top="+top);
+    console.log("thistop="+this.top);
+    this.redrawStack();
+    newElem.append("rect")
+            .attr("x",this.width/2-this.rectWidth/2)
+            .attr("y",that.height-(that.rectHeight+that.padding)*(top+1))
+            .attr("width",this.rectWidth)
+            .attr("height",this.rectHeight)
+            .attr("fill",val.background)
+            .attr("rx",2)
+            .attr("ry",2);
+
+    newElem.append("text")
+            .text(val.text)
+            .attr("x",that.width/2)
+            .attr("y",that.rectHeight/3*2 + that.height-(that.rectHeight+that.padding)*(top+1))
+            .attr("text-anchor", "middle")
+            .attr("font-size", parseInt(that.rectHeight / 3) )
+            .attr("fill",val.color);
+
+    newElem.transition()
+           .attr("transform","translate(0,"+distance+")").duration(500).ease(d3.easeSinOut);
+
+    setTimeout(function(){
+      newElem.remove().exit();
     },300);
   };
 
