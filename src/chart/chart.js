@@ -105,7 +105,7 @@
   };
 
   Chart.prototype.unhighlight = function (idx) {
-    if (!idx) {
+    if (idx === undefined) {
       this.h.fill(0);
     }
     else {
