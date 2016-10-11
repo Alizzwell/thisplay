@@ -27,7 +27,7 @@
       "d3": "npm:d3@4.2.2"
     },
     "shim": {
-      "thisplay": {
+      "alizzwell/thisplay": {
         "deps": ["d3"],
         "exports": "d3"
       }
