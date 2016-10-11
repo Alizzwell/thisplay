@@ -77,6 +77,22 @@
   LinkedList.prototype.setDataCur = function(val) {
     this.setData(this.cur, val);
   };
+  
+  LinkedList.prototype.pushBack = function(val) {
+    this.addNode(this.data.length, val);
+  };
+  
+  LinkedList.prototype.pushFront = function(val) {
+    this.addNode(1, val);
+  };
+  
+  LinkedList.prototype.popBack = function() {
+    this.deleteNode(this.data.length - 1);
+  };
+  
+  LinkedList.prototype.popFront = function() {
+    this.deleteNode(1);
+  };
 
   LinkedList.prototype.addNode = function(idx, val) {
     // if (idx < 0 || this.data.length < idx) {
