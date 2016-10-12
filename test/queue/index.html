@@ -12,8 +12,18 @@
   <script src="../../src/queue/queue.js"></script>
 </head>
 
+<style>
+  input {width: 100px;}
+
+  .test_svg {
+    width: 800px;
+    height: 450px;
+    border: 1px solid black;
+  }
+</style>
+
 <body>
-  <div id = "section1"></div>
+  <svg class="test_svg" id="canvas"/>
   <hr/>
 
   <button onClick="btnPushClk()">Push</button>
@@ -25,7 +35,7 @@
   <p/>
 
   <script>
-    var queue = new thisplay.Queue('#section1');
+    var queue = new thisplay.Queue('#canvas');
 
     function btnPushClk() {
       var value = document.getElementById('pushValue').value;
