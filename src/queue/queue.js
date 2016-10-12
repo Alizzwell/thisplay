@@ -56,7 +56,7 @@
 				.attr("text-anchor","middle")
 				.attr("id","arrow")
 				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
-				.attr("y",function(){return 300+that.rectHeight*1.3;})
+				.attr("y",function(){return 300+that.rectHeight*1.3;});
 
 			that.queue.append("text")
 				.text(function(){return "queue["+(i)+"] = "+ that.queueData[i];})
@@ -66,7 +66,7 @@
 				.attr("text-anchor","middle")
 				.attr("id","arrInfo")
 				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
-				.attr("y",function(){return 300+that.rectHeight*1.6;})
+				.attr("y",function(){return 300+that.rectHeight*1.6;});
 		};
 
 		this.mouseOut = function (d,i) {
@@ -195,8 +195,8 @@
 
 			newElem.append("text")
 				.text(_value)
-				.attr("x",function(){return position + that.rectWidth/2;})
-				.attr("y",function(){return 300 + that.rectHeight/5*3;})
+				.attr("x", position + that.rectWidth/2)
+				.attr("y", 300 + that.rectHeight/5 * 3)
 				.attr("fill","black")
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
@@ -261,7 +261,7 @@
 			.attr("fill","black")
 			.attr("text-anchor","middle")
 			.attr("x",function(){return 100 +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.2;})
+			.attr("y",function(){return 300-that.rectHeight*0.2;});
 
 		this.queue.append("text")
 			.text("front")
@@ -270,7 +270,7 @@
 			.attr("fill","black")
 			.attr("text-anchor","middle")
 			.attr("x",function(){return 100 +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.5;})
+			.attr("y",function(){return 300-that.rectHeight*0.5;});
 
 
 		this.queue.append("text")
@@ -280,7 +280,7 @@
 			.attr("fill","black")
 			.attr("text-anchor","middle")
 			.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.2;})
+			.attr("y",function(){return 300-that.rectHeight*0.2;});
 
 		this.queue.append("text")
 			.text("rear")
@@ -289,7 +289,7 @@
 			.attr("fill","black")
 			.attr("text-anchor","middle")
 			.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.5;})
+			.attr("y",function(){return 300-that.rectHeight*0.5;});
   };
 
   thisplay.Queue = Queue;
