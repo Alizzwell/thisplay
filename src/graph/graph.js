@@ -193,52 +193,52 @@
   };
 
   Graph.prototype.makeNode = function (id) {
-      if(this.svgNode.select("#node_"+id).node() == null) {
-        this.nodes.push({id: "node_" + id, text: id});
-      }
-      this.force.nodes(this.nodes).alpha(1).restart();
-      this.redraw();
+    if(this.svgNode.select("#node_"+id).node() == null) {
+      this.nodes.push({id: "node_" + id, text: id});
+    }
+    this.force.nodes(this.nodes).alpha(1).restart();
+    this.redraw();
   };
   
   Graph.prototype.makeEdge = function (source, target, value) {
-      var that = this;
-      var snode, tnode;
-      var edge = this.svgLink.select("#link_" + source + "_" + target).node();
-      snode = this.svgNode.select("#node_" + source).node();
-      tnode = this.svgNode.select("#node_" + target).node();
-      
-      if(snode == null || tnode == null){
-        pr("no node");
+    var that = this;
+    var snode, tnode;
+    var edge = this.svgLink.select("#link_" + source + "_" + target).node();
+    snode = this.svgNode.select("#node_" + source).node();
+    tnode = this.svgNode.select("#node_" + target).node();
+    
+    if(snode == null || tnode == null){
+      pr("no node");
+    }
+    
+    else if(edge == null){
+      pr("push");
+      this.links.push({
+        id : "link_" + source + "_" + target, 
+        source : snode,
+        target : tnode, 
+        value : value, 
+        is_directed_array : false 
+      });
+    }  
+    
+    else{
+      pr("dup");
+      for(var i=0;i<this.links.length;i++){
+        if(this.links[i].id === "link_" + source + "_" + target){
+          this.links[i].value = value;
+          this.svgLink.select("#textlink_" + source + "_" + target).text(value);
+          break;
+        } 
       }
+    }
+    
+    this.forceLink
+      .links(this.links);
       
-      else if(edge == null){
-        pr("push");
-        this.links.push({
-          id : "link_" + source + "_" + target, 
-          source : snode,
-          target : tnode, 
-          value : value, 
-          is_directed_array : false 
-        });
-      }  
-      
-      else{
-        pr("dup");
-        for(var i=0;i<this.links.length;i++){
-          if(this.links[i].id === "link_" + source + "_" + target){
-            this.links[i].value = value;
-            this.svgLink.select("#textlink_" + source + "_" + target).text(value);
-            break;
-          } 
-        }
-      }
-      
-      this.forceLink
-        .links(this.links);
-        
-      this.force.alpha(1);
-      this.force.restart();
-      this.redraw();
+    this.force.alpha(1);
+    this.force.restart();
+    this.redraw();
    };
     
   Graph.prototype.highlightNode = function (id) {

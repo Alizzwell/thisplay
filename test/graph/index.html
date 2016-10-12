@@ -84,7 +84,13 @@
       var source = document.getElementById('source').value;
       var target = document.getElementById('target').value;
       var value = document.getElementById('value').value;
-      graph.makeEdge(Number(source), Number(target), Number(value));
+
+      if (value === '') {
+        graph.makeEdge(Number(source), Number(target));
+      } 
+      else {
+        graph.makeEdge(Number(source), Number(target), Number(value));
+      }
     }
 
     function btnHighlightNode() {
