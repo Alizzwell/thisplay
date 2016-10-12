@@ -885,6 +885,10 @@
 	'use strict';
 
 	function Queue(target) {
+		var svg = d3.select(target).append("g")
+      .attr("class", "thisplay-chart")
+      .attr("transform", "translate(25, 25)");
+
 		var queue;
 		var queueData = [];
 		var front = 0;
@@ -895,22 +899,15 @@
 		var width = 1000;
 		var height = 700;
 
-    var container = d3.select(target)
-			.append("svg")
-			.attr("width", width)
-			.attr("height", height)
-			.attr("id","container")
-			.append("g");
-
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
       .on("zoom", function () {
-        container.attr("transform", d3.event.transform);
+        svg.attr("transform", d3.event.transform);
       });
 
     d3.select(target).call(zoom);
 
-		this.container = container;
+		this.container = svg;
 		this.target = target;
 		this.queue = queue;
 		this.queueData = queueData;
