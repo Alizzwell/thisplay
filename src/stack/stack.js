@@ -60,7 +60,7 @@
           .attr("font-size",parseInt(that.rectHeight / 2))
           .attr("fill",that.data[i].color)
           //.attr("text-anchor","middle")
-          .attr("id","stackInfo")
+          .attr("id","stackInfo");
     };
 
     this.mouseOut = function(d,i){
