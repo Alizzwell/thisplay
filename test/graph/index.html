@@ -52,6 +52,12 @@
   <input type="text" id="unHighlightEdge_src" placeholder="src" />
   <input type="text" id="unHighlightEdge_trg" placeholder="trg" />
   <p/>
+    
+  <button onClick="btnUnHighlightNodeAll()">unHighlightNodeAll</button>
+  <p/>
+   
+  <button onClick="btnUnHighlightEdgeAll()">unHighlightEdgeAll</button>
+  <p/>
   
   
   <button onClick="btnClearClk()">clear</button>
@@ -102,7 +108,14 @@
       var trg = document.getElementById('unHighlightEdge_trg').value;
       graph.unHighlightEdge(Number(src), Number(trg));
     }
+   
+    function btnUnHighlightNodeAll() {
+      graph.unHighlightNodeAll();
+    }   
 
+    function btnUnHighlightEdgeAll() {
+      graph.unHighlightEdgeAll();
+    }
     
     function btnClearClk() {
       graph.clear();
@@ -116,6 +129,7 @@
     graph.makeEdge(6, 5 ,3);
     graph.highlightNode(6);
     graph.highlightEdge(6, 5, 3);
+    graph.makeEdge(3, 4, 3);
   </script>
 </body>
 
