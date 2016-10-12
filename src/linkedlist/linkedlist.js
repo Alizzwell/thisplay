@@ -132,10 +132,10 @@
       .transition().duration(dur)
       .attr("transform", function(d, i) {
         if (i < idx) {
-          return "translate(" + (i * 80) + ",15)"
+          return "translate(" + (i * 80) + ",15)";
         }
         else {
-          return "translate(" + ((i + 1) * 80) + ",15)"
+          return "translate(" + ((i + 1) * 80) + ",15)";
         }
       });
   };
@@ -178,7 +178,7 @@
         that.redraw();
         that.colorCur();
       }, delay);
-  }
+  };
 
   LinkedList.prototype.deleteNodeAniMove = function(idx, dur) {
     this.svg.selectAll(".node")
@@ -199,10 +199,10 @@
       .transition().duration(dur)
       .attr("transform", function(d, i) {
         if (i >= idx) {
-          return "translate(" + ((i - 1) * 80) + ",15)"
+          return "translate(" + ((i - 1) * 80) + ",15)";
         }
         else {
-          return "translate(" + (i * 80) + ",15)"
+          return "translate(" + (i * 80) + ",15)";
         }
       });
   };
@@ -271,7 +271,7 @@
     this.svg.selectAll(".arrow").data(this.data.slice(0, -1))
       .enter().append("path")
       .attr("class", "arrow")
-      .attr("transform", function(d, i) { return "translate(" + (i * 80) + ",15)" })
+      .attr("transform", function(d, i) { return "translate(" + (i * 80) + ",15)"; })
       .attr("d", "M40,0 L70,0")
       .style("marker-end", "url(#arrow)")
       .style("stroke", "black")

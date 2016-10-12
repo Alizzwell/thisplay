@@ -27,14 +27,14 @@
         .strength(-3000)
       //  .theta(0.9) // need to test
         .distanceMin(100) // ntt
-        .distanceMax(300) // ntt
+        .distanceMax(300); // ntt
 
     var forceLink = d3.forceLink();
     forceLink
       .links(links)
       .distance(300) // ntt
       .strength(0.7) // ntt
-      .iterations(0.5) // ntt
+      .iterations(0.5); // ntt
 
     var forceCollide = d3.forceCollide()
     .radius(2)
@@ -49,8 +49,8 @@
       .force("link", forceLink)
       .force("center", d3.forceCenter(width/2, height/2))
       .force("collide", forceCollide)
-      .force("x", d3.forceX().strength(.05))
-      .force("y", d3.forceY().strength(.1))
+      .force("x", d3.forceX().strength(0.05))
+      .force("y", d3.forceY().strength(0.1))
       .alphaMin(0.2)
       .alphaDecay(0.01)
       .velocityDecay(0.85)
@@ -77,28 +77,28 @@
 
 
 
-    var drawLine = function (d){
+    var drawLine = function (d) {
       var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
       var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
-      var dx = tx - sx,
-      dy = ty - sy,
-      dx = dx * 3, dy = dy * 3,
-      dr = Math.sqrt(dx * dx + dy * dy),
-      theta = Math.atan2(dy, dx) + Math.PI / 26.55,
-      d90 = Math.PI / 2,
-      dtxs = tx - 1.22 * radius * Math.cos(theta),
-      dtys = ty - 1.22 * radius * Math.sin(theta);
+      var dx = tx - sx;
+      var dy = ty - sy;
+      dx = dx * 3;
+			dy = dy * 3;
+      var dr = Math.sqrt(dx * dx + dy * dy);
+      var theta = Math.atan2(dy, dx) + Math.PI / 26.55;
+      var dtxs = tx - 1.22 * radius * Math.cos(theta);
+      var dtys = ty - 1.22 * radius * Math.sin(theta);
       var val1 = 3.5, val2 = 10.5;
+
       return "M" + sx + "," + sy +
-      "A" + dr + "," + dr + " 0 0 1," + tx + "," + ty +
-      "A" + dr + "," + dr + " 0 0 0," + sx + "," + sy +
-      "M" + dtxs + "," + dtys +
-      "l" + (val1 * Math.cos(d90 - theta) - val2 * Math.cos(theta)) + "," +
-      (-val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) +
-      "L" + (dtxs - val1 * Math.cos(d90 - theta) - val2 * Math.cos(theta)) + "," +
-      (dtys + val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) + "z";
-      //return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
-    }
+	      "A" + dr + "," + dr + " 0 0 1," + tx + "," + ty +
+	      "A" + dr + "," + dr + " 0 0 0," + sx + "," + sy +
+	      "M" + dtxs + "," + dtys +
+	      "l" + (val1 * Math.cos(d90 - theta) - val2 * Math.cos(theta)) + "," +
+	      (-val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) +
+	      "L" + (dtxs - val1 * Math.cos(d90 - theta) - val2 * Math.cos(theta)) + "," +
+	      (dtys + val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) + "z";
+    };
 
 
 
@@ -184,7 +184,7 @@
       snode = this.svgNode.select("#node_" + source).node();
       tnode = this.svgNode.select("#node_" + target).node();
 
-      if(snode == null || tnode == null){
+      if(snode === null || tnode === null){
       }
 
       else if(!is_exist(edge)){
@@ -210,31 +210,31 @@
 
   Graph.prototype.highlightNode = function (id) {
    	var node = this.svg.select("#node_" + id);
-    if(node.node() != null) {
+    if(node.node() !== null) {
       node.transition().duration(500).style("fill", "red");
     }
-  }
+  };
 
   Graph.prototype.highlightEdge = function (source, target) {
    	var edge = this.svg.select("#link_" + source + "_" + target);
-    if(edge.node() != null) {
+    if(edge.node() !== null) {
       edge.transition().duration(500).style("stroke", "red");
     }
-  }
+  };
 
   Graph.prototype.unHighlightNode = function (id) {
    	var node = this.svg.select("#node_" + id);
-    if(node.node() != null) {
+    if(node.node() !== null) {
       node.transition().duration(500).style("fill", "black");
     }
-  }
+  };
 
   Graph.prototype.unHighlightEdge = function (source, target) {
    	var edge = this.svg.select("#link_" + source + "_" + target);
-    if(edge.node() != null) {
+    if(edge.node() !== null) {
       edge.transition().duration(500).style("stroke", "#999");
     }
-  }
+  };
 
   Graph.prototype.clear = function(){
     this.svg.selectAll(".node").remove();
@@ -243,10 +243,10 @@
     this.nodes = [];
     this.links = [];
     this.redraw();
-  }
+  };
 
   function is_exist(a){
-    if(a != null) return true;
+    if(a !== null) return true;
     else return false;
   }
 
