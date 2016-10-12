@@ -210,6 +210,13 @@
 		}
 
   };
+	
+	Queue.prototype.init = function () {
+		this.Clear();
+		this.front = 0;
+		this.rear = 0;
+		this.drawQueue();
+  };
 
   Queue.prototype.drawQueue = function () {
 		var that = this;
@@ -217,11 +224,41 @@
     if(this.queue !== undefined){
 			this.queue.remove().exit();
 		}
+		
+		this.queue = this.container.append("g");
 
 		if(this.queueData.length === 0)
+		{
+			this.queue.append("text")
+				.text("▼▼")
+				.attr("font-family","Consolas")
+				.attr("font-size","20px")
+				.attr("fill","black")
+				.attr("text-anchor","middle")
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.2;})
+			
+			this.queue.append("text")
+				.text("front")
+				.attr("font-family","Consolas")
+				.attr("font-size","20px")
+				.attr("fill","black")
+				.attr("text-anchor","middle")
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.5;})
+			
+			this.queue.append("text")
+				.text("rear")
+				.attr("font-family","Consolas")
+				.attr("font-size","20px")
+				.attr("fill","black")
+				.attr("text-anchor","middle")
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.rear +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.8;})
+			
 			return ;
+		}
 
-		this.queue = this.container.append("g");
 		this.queue.selectAll("g.rect")
 			.data(this.queueData)
 			.enter()
