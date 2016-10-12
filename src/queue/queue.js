@@ -81,7 +81,7 @@
 		};
   }
 
-  Queue.prototype.Push = function (_value) {
+  Queue.prototype.push = function (_value) {
 		var newElem;
 
 		this.rear++;
@@ -118,7 +118,7 @@
 		},300);
   };
 
-  Queue.prototype.Pop = function () {
+  Queue.prototype.pop = function () {
 		var that = this;
     if(this.front == this.rear)
 			return ;
@@ -164,7 +164,7 @@
 		},300);
   };
 
-	Queue.prototype.Clear = function () {
+	Queue.prototype.clear = function () {
 
     if(this.front == this.rear)
 			return ;
