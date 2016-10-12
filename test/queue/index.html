@@ -26,6 +26,9 @@
   <svg class="test_svg" id="canvas"/>
   <hr/>
 
+	
+  <button onClick="btnInitClk()">Init</button>
+  <p/>
   <button onClick="btnPushClk()">Push</button>
   <input type="text" id="pushValue" placeholder="value" />
   <p/>
@@ -37,6 +40,10 @@
   <script>
     var queue = new thisplay.Queue('#canvas');
 
+		function btnInitClk() {
+      queue.init();
+    }
+		
     function btnPushClk() {
       var value = document.getElementById('pushValue').value;
       queue.push(Number(value));
