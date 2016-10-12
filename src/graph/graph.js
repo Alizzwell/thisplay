@@ -24,7 +24,7 @@
 	  var links = [];
 
     var forceManyBody = d3.forceManyBody()
-        .strength(-3000)
+        .strength(-2400)
       //  .theta(0.9) // need to test
         .distanceMin(100) // ntt
         .distanceMax(300); // ntt
@@ -52,7 +52,7 @@
       .force("x", d3.forceX().strength(0.05))
       .force("y", d3.forceY().strength(0.1))
       .alphaMin(0.2)
-      .alphaDecay(0.01)
+      .alphaDecay(0.03)
       .velocityDecay(0.85)
 
       .on("tick", function () {
@@ -69,8 +69,12 @@
         svgLink.selectAll(".link")
           .attr("d", function(d) {
              return drawLine(d);
-          });
+        });
 
+				svgLink.selectAll(".linktext")
+          .attr("transform", function(d){
+            return drawText(d);
+        });
       });
 
 
@@ -86,6 +90,7 @@
 			dy = dy * 3;
       var dr = Math.sqrt(dx * dx + dy * dy);
       var theta = Math.atan2(dy, dx) + Math.PI / 26.55;
+			var d90 = Math.PI / 2;
       var dtxs = tx - 1.22 * radius * Math.cos(theta);
       var dtys = ty - 1.22 * radius * Math.sin(theta);
       var val1 = 3.5, val2 = 10.5;
@@ -98,10 +103,22 @@
 	      (-val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) +
 	      "L" + (dtxs - val1 * Math.cos(d90 - theta) - val2 * Math.cos(theta)) + "," +
 	      (dtys + val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) + "z";
-    };
+    }
 
+    var drawText = function(d){
+        var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
+        var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
+				var dx = tx - sx;
+				var dy = ty - sy;
+				dx = dx * 3, dy = dy * 3;
 
-
+				var dr = Math.sqrt(dx * dx + dy * dy),
+					theta = Math.atan2(dy, dx) + Math.PI / 11.95,
+					d90 = Math.PI / 2,
+					dtxs = tx - 4 * radius * Math.cos(theta),
+					dtys = ty - 4 * radius * Math.sin(theta);
+				return 'translate(' + [dtxs, dtys] + ')';
+    }
 
     this.target = target;
     this.svg = svg;
@@ -127,6 +144,14 @@
       .insert("path")
       .attr("class", "link")
       .attr("id", function(d) { return d.id; });
+
+    this.svgLink.selectAll('.linktext')
+      .data(this.links)
+      .enter()
+      .insert('text')
+      .attr("class", "linktext")
+      .attr("id", function(d) { return "text" + d.id; })
+      .text(function(d) { return d.value; });
 
     this.svgNode.selectAll('.node')
       .data(this.nodes)
@@ -167,45 +192,48 @@
   };
 
   Graph.prototype.makeNode = function (id) {
-      if(!is_exist(this.svgNode.select("#node_"+id).node())) {
-        this.nodes.push({id: "node_" + id, text: id});
-      }
-
-      this.force.nodes(this.nodes);
-      this.force.alpha(1);
-      this.force.restart();
-      this.redraw();
+    if(this.svgNode.select("#node_"+id).node() == null) {
+      this.nodes.push({id: "node_" + id, text: id});
+    }
+    this.force.nodes(this.nodes).alpha(1).restart();
+    this.redraw();
   };
 
   Graph.prototype.makeEdge = function (source, target, value) {
-      var that = this;
-      var snode, tnode;
-      var edge = this.svgLink.select("#link_" + source + "_" + target).node();
-      snode = this.svgNode.select("#node_" + source).node();
-      tnode = this.svgNode.select("#node_" + target).node();
+    var that = this;
+    var snode, tnode;
+    var edge = this.svgLink.select("#link_" + source + "_" + target).node();
+    snode = this.svgNode.select("#node_" + source).node();
+    tnode = this.svgNode.select("#node_" + target).node();
 
-      if(snode === null || tnode === null){
+    if(snode == null || tnode == null){
+      // pr("no node");
+    }
+    else if(edge == null){
+      this.links.push({
+        id : "link_" + source + "_" + target,
+        source : snode,
+        target : tnode,
+        value : value,
+        is_directed_array : false
+      });
+    }
+    else{
+      for(var i=0;i<this.links.length;i++){
+        if(this.links[i].id === "link_" + source + "_" + target){
+          this.links[i].value = value;
+          this.svgLink.select("#textlink_" + source + "_" + target).text(value);
+          break;
+        }
       }
+    }
 
-      else if(!is_exist(edge)){
-        this.links.push({
-          id : "link_" + source + "_" + target,
-          source : snode,
-          target : tnode,
-          value : value,
-          is_directed_array : false
-        });
-      }
+    this.forceLink
+      .links(this.links);
 
-      else{
-      }
-
-      this.forceLink
-        .links(this.links);
-
-      this.force.alpha(1);
-      this.force.restart();
-      this.redraw();
+    this.force.alpha(1);
+    this.force.restart();
+    this.redraw();
    };
 
   Graph.prototype.highlightNode = function (id) {
@@ -236,19 +264,28 @@
     }
   };
 
+  Graph.prototype.unHighlightNodeAll = function () {
+    for(var i = 0; i < this.nodes.length; i++){
+      this.unHighlightNode(this.nodes[i].text);
+    }
+  };
+
+  Graph.prototype.unHighlightEdgeAll = function () {
+    for(var i = 0; i < this.links.length; i++){
+      this.svg.select("#" + this.links[i].id)
+      .transition().duration(500).style("stroke", "#999");
+    }
+  };
+
   Graph.prototype.clear = function(){
     this.svg.selectAll(".node").remove();
     this.svg.selectAll(".nodetext").remove();
     this.svg.selectAll(".link").remove();
+    this.svg.selectAll(".linktext").remove();
     this.nodes = [];
     this.links = [];
     this.redraw();
   };
-
-  function is_exist(a){
-    if(a !== null) return true;
-    else return false;
-  }
 
   thisplay.Graph = Graph;
 
