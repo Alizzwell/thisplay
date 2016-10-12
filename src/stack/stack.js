@@ -45,8 +45,8 @@
 
       that.svg.append("text")
       .text("←")
-      .attr("font-family","Consolas")
-      .attr("font-size",parseInt(that.rectHeight / 2))
+      .attr("font-family","Arial")
+      .attr("font-size", (that.rectHeight / 2)+"px")
       .attr("fill",that.data[i].color)
       .attr("text-anchor","middle")
       .attr("id","arrow")
@@ -56,10 +56,10 @@
 
       that.svg.append("text")
           .text(function(){return "stack["+i+"] = " + that.data[i].text;})
-          .attr("x", that.width/2+ that.rectWidth/2 + 10 + parseInt(that.rectHeight / 2))
+          .attr("x", that.width/2+ that.rectWidth/2 + 10 + that.rectHeight / 2)
           .attr("y",that.height-(that.rectHeight+that.padding)*(i+1)+that.rectHeight/3*2)
-          .attr("font-family","Consolas")
-          .attr("font-size",parseInt(that.rectHeight / 2))
+          .attr("font-family","Arial")
+          .attr("font-size",(that.rectHeight / 2)+"px")
           .attr("fill",that.data[i].color)
           //.attr("text-anchor","middle")
           .attr("id","stackInfo")
@@ -123,12 +123,13 @@
       .on("mouseout",this.mouseOut);
       
 
-    cells.append("text")
+      console.log(rectHeight/3);
+      cells.append("text")
       .attr("x", that.width/2)
       .attr("y", function(d,i){return that.height-(rectHeight+that.padding)*(i+1)+rectHeight/3*2;})
       .attr("text-anchor", "middle")
-    //  .attr("dy", ".35em")
-      .attr("font-size", parseInt(rectHeight / 3) )
+      .attr("font-family","Arial")
+      .attr("font-size",function(d){return rectHeight / 3 +"px";})
       .attr("fill", function (d) { return d.color; })
       .text(function (d) {  return d.text; });
   };
@@ -145,7 +146,7 @@
     var distance = (this.height-(this.rectHeight+this.padding)*(this.top+1))-this.rectHeight;
     var newElem = this.svg.append("g");
     var that = this;
-    var fontSize = parseInt(that.rectHeight / 3);
+    var fontSize = that.rectHeight / 3;
 
 
     newElem.append("rect")
@@ -162,7 +163,8 @@
             .attr("x",that.width/2)
             .attr("y",that.rectHeight/3*2 + that.rectHeight)
             .attr("text-anchor", "middle")
-            .attr("font-size", parseInt(that.rectHeight / 3) )
+            .attr("font-family","Arial")
+            .attr("font-size", (that.rectHeight / 3)+"px" )
             .attr("fill",this.data[this.top].color);
     
     
@@ -200,7 +202,8 @@
             .attr("x",that.width/2)
             .attr("y",that.rectHeight/3*2 + that.height-(that.rectHeight+that.padding)*(top+1))
             .attr("text-anchor", "middle")
-            .attr("font-size", parseInt(that.rectHeight / 3) )
+            .attr("font-family","Arial")
+            .attr("font-size", (that.rectHeight / 3 )+"px")
             .attr("fill",val.color);
 
     newElem.transition()
