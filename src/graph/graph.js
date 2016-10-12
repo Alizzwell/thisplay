@@ -103,14 +103,15 @@
 	      (-val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) +
 	      "L" + (dtxs - val1 * Math.cos(d90 - theta) - val2 * Math.cos(theta)) + "," +
 	      (dtys + val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) + "z";
-    }
+    };
 
     var drawText = function(d){
         var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
         var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
 				var dx = tx - sx;
 				var dy = ty - sy;
-				dx = dx * 3, dy = dy * 3;
+				dx = dx * 3;
+			 	dy = dy * 3;
 
 				var dr = Math.sqrt(dx * dx + dy * dy),
 					theta = Math.atan2(dy, dx) + Math.PI / 11.95,
@@ -118,7 +119,7 @@
 					dtxs = tx - 4 * radius * Math.cos(theta),
 					dtys = ty - 4 * radius * Math.sin(theta);
 				return 'translate(' + [dtxs, dtys] + ')';
-    }
+    };
 
     this.target = target;
     this.svg = svg;
@@ -192,7 +193,7 @@
   };
 
   Graph.prototype.makeNode = function (id) {
-    if(this.svgNode.select("#node_"+id).node() == null) {
+    if(this.svgNode.select("#node_"+id).node() === null) {
       this.nodes.push({id: "node_" + id, text: id});
     }
     this.force.nodes(this.nodes).alpha(1).restart();
@@ -206,10 +207,10 @@
     snode = this.svgNode.select("#node_" + source).node();
     tnode = this.svgNode.select("#node_" + target).node();
 
-    if(snode == null || tnode == null){
+    if(snode === null || tnode === null){
       // pr("no node");
     }
-    else if(edge == null){
+    else if(edge === null){
       this.links.push({
         id : "link_" + source + "_" + target,
         source : snode,
@@ -219,7 +220,7 @@
       });
     }
     else{
-      for(var i=0;i<this.links.length;i++){
+      for(var i = 0; i < this.links.length; i++){
         if(this.links[i].id === "link_" + source + "_" + target){
           this.links[i].value = value;
           this.svgLink.select("#textlink_" + source + "_" + target).text(value);
