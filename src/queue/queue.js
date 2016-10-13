@@ -56,7 +56,7 @@
 				.attr("y",function(){return 300+that.rectHeight*1.3;});
 
 			that.queue.append("text")
-				.text(function(){return "queue["+(i)+"] = "+ that.queueData[i];})
+				.text(function(){return "queue["+(i+that.front)+"] = "+ that.queueData[i];})
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
