@@ -7,7 +7,7 @@
 .thisplay-graph .nodetext{
 	fill: white;
 	text-align: center;
-	font-size: 	50px;
+	font-size: 	50px !important;
 	font: arial !important;
 	text-anchor: middle;
 	vertical-align: middle;
@@ -23,7 +23,7 @@
 .thisplay-graph .linktext{
 	fill: black;
 	text-align: center;
-	font-size: 50px;
+	font-size: 50px !important;
 	font: arial !important;
 	text-anchor: middle;
 	vertical-align: middle;

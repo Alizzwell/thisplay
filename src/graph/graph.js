@@ -308,10 +308,10 @@
 
   Graph.prototype.highlightEdge = function (source, target) {
    	var edge = this.svg.select("#link_" + source + "_" + target); 
-    var trg_to_src_edge = this.svg.select("#link_" + target + "_" + source);
-    if(trg_to_src_edge.node() != null){
-      if(trg_to_src_edge.node().getAttribute("is_directed") === false) {
-        edge = this.svg.select("#link_" + target + "_" + source);
+    var edge2 = this.svg.select("#link_" + target + "_" + source);
+    if(edge2.node() != null){
+      if(edge2.node().getAttribute("is_directed") === "false") {
+        edge = edge2;
       }
     }    
     if(edge.node() !== null) {
