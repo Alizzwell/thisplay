@@ -218,10 +218,14 @@
     var that = this;
     var snode, tnode;
     var edge = this.svgLink.select("#link_" + source + "_" + target).node();
+    
     snode = this.svgNode.select("#node_" + source).node();
     tnode = this.svgNode.select("#node_" + target).node();
 
-    if(snode === null || tnode === null){
+    if(source == target){
+      // source == target
+    }
+    else if(snode === null || tnode === null){
       // pr("no node");
     }
     else if(edge === null){
@@ -310,7 +314,6 @@
         edge = this.svg.select("#link_" + target + "_" + source);
       }
     }    
-    pr(edge);
     if(edge.node() !== null) {
       edge.transition().duration(500).style("stroke", "red");
     }
@@ -329,7 +332,6 @@
  
       if(this.links[i].source == tnode && this.links[i].target == snode 
         && this.links[i].is_directed === false){
-        pr("get");
         this.links.splice(i, 1);
         this.svgLink.select("#link_" + target + "_" + source).remove();
         this.svgLink.select("#textlink_" + target + "_" + source).remove();
@@ -396,9 +398,6 @@
     this.links = [];
     this.redraw();
   };
-  function pr(a) {
-    console.log(a);
-  }
   thisplay.Graph = Graph;
 
 })(thisplay, d3);
