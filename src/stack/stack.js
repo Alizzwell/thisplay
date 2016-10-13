@@ -64,7 +64,7 @@
 
     this.mouseOver = function(d,i){
       d3.select("#elemIdx_"+i)
-        .attr("fill","#9598AB")
+        .attr("fill","#D3C4BE")//"#9598AB")
         .attr("width",that.rectWidth*1.1)
         .attr("height",that.rectHeight*1.1)
         .attr("transform","translate("+(-that.rectWidth*0.05)+","+(-that.rectHeight*0.05)+")");
@@ -173,7 +173,7 @@
     this.data[this.top] = {
         text:val,
         color:"#4F474A",
-        background:"#FFA4A7"
+        background: "#EBCFC4"//"#FFA4A7"
       };
 
 
