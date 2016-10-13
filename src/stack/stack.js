@@ -26,11 +26,17 @@
     this.height = height;
     this.data = data;
     this.rectHeight = 30;
-    this.rectWidth = 30;
+    this.rectWidth = 70;
     this.padding = this.rectHeight / 10;
     this.top = -1;
 
+
+    svg.append("path")
+    .attr("stroke","steelblue")
+    .attr("stroke-width","2")
+    .attr("fill","none");
     var that = this;
+
 
     this.mouseOver = function(d,i){
       d3.select("#elemIdx_"+i)
@@ -76,6 +82,15 @@
     };
 
   }
+
+  Stack.prototype.init = function(size){
+    this.top = -1;
+    this.rectWidth = Math.ceil(this.width/10);
+    this.rectHeight = Math.ceil(this.height/(size+size/10));
+
+    this.padding = this.rectHeight/10;
+
+  };
 
   Stack.prototype.redrawStack = function () {
     var that = this;
