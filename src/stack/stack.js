@@ -10,8 +10,7 @@
     var width = 500;
     var height = 300;
     var data = [];
-
-
+    var lineData;
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
       .on("zoom", function () {
@@ -29,12 +28,37 @@
     this.rectWidth = 70;
     this.padding = this.rectHeight / 10;
     this.top = -1;
+    lineData = [
+      {"x" : (width-this.rectWidth-4*this.padding)/2, "y" : this.padding},
+      {"x" : (width-this.rectWidth-4*this.padding)/2, "y" : height/2},
+      {"x" : (width-this.rectWidth-4*this.padding)/2, "y" : height},
+      {"x" : (width-this.rectWidth-4*this.padding)/2, "y" : height+this.padding},
+      {"x" : (width+this.rectWidth+4*this.padding)/2, "y" : height+this.padding},
+      {"x" : (width+this.rectWidth+4*this.padding)/2, "y" : height},
+      {"x" : (width+this.rectWidth+4*this.padding)/2, "y" : height/2},
+      {"x" : (width+this.rectWidth+4*this.padding)/2, "y" : this.padding}
+    ];
 
+    var lineFunc = d3.line().x(function(d){return d.x;}).y(function(d){return d.y;}).curve(d3.curveCatmullRom,1.0);
 
     svg.append("path")
-    .attr("stroke","steelblue")
+    .attr("d",lineFunc(lineData))
+    .attr("stroke","#C6B2BB")
     .attr("stroke-width","2")
-    .attr("fill","none");
+    .attr("fill","none")
+    .attr("id","stackLine");
+
+    var lineLength = d3.select("#stackLine").node().getTotalLength();
+
+     d3.select("#stackLine")
+      .attr("stroke-dasharray", lineLength)
+      .attr("stroke-dashoffset", lineLength)
+      .transition()
+      .duration(1000)
+      .attr("stroke-dashoffset", 0);
+
+
+
     var that = this;
 
 
@@ -85,7 +109,7 @@
 
   Stack.prototype.init = function(size){
     this.top = -1;
-    this.rectWidth = Math.ceil(this.width/10);
+   // this.rectWidth = Math.ceil(this.width/10);
     this.rectHeight = Math.ceil(this.height/(size+size/10));
 
     this.padding = this.rectHeight/10;
@@ -157,9 +181,10 @@
             .attr("y",this.rectHeight)
             .attr("width",this.rectWidth)
             .attr("height",this.rectHeight)
-            .attr("fill",this.data[this.top].background)
+            .attr("fill","white")
             .attr("rx",2)
-            .attr("ry",2);
+            .attr("ry",2)
+            .attr("id","newElemRect");
 
     newElem.append("text")
             .text(val)
@@ -168,16 +193,27 @@
             .attr("text-anchor", "middle")
             .attr("font-family","Arial")
             .attr("font-size", (that.rectHeight / 3)+"px" )
-            .attr("fill",this.data[this.top].color);
+            .attr("fill",this.data[this.top].color)
+            .attr("id","newElemText");
 
+
+    d3.select("#newElemRect")
+            .transition()
+            .attr("fill",this.data[this.top].background)
+            .duration(300);
+
+    d3.select("#newElemText")
+            .transition()
+            .attr("fill",this.data[this.top].color)
+            .duration(300);
 
     newElem.transition()
-            .attr("transform","translate(0,"+distance+")").duration(500).ease(d3.easeSinOut);
+            .attr("transform","translate(0,"+distance+")").duration(500).delay(300).ease(d3.easeSinOut);
 
     setTimeout(function(){
       newElem.remove().exit();
       that.redrawStack();
-    },300);
+    },600);
   };
 
   Stack.prototype.pop = function(){
