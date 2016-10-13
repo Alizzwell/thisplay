@@ -1,6 +1,7 @@
 {
   "name": "thisplay",
-  "version": "1.0.0",
+  "main": "index.js",
+  "version": "2.1.4",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,5 +21,19 @@
     "grunt-contrib-cssmin": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "^2.0.0"
-  }
+  },
+  "jspm": {
+    "dependencies": {
+      "d3": "npm:d3@^4.2.2"
+    },
+    "shim": {
+      "thisplay": {
+        "deps": ["d3"],
+        "exports": "d3"
+      }
+    }
+  },
+  "ignore": [
+    ".bowerrc"
+  ]
 }

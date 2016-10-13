@@ -1,10 +1,8 @@
-;(function (window, d3) {
+;(function (thisplay, d3) {
   'use strict';
 
 
   function Stack(target) {
-    d3 = d3 || window.d3;
-
     var svg = d3.select(target).append("g")
       .attr("class", "thisplay-stack")
       .attr("transform", "translate(25, 25)");
@@ -27,14 +25,14 @@
     this.width = width;
     this.height = height;
     this.data = data;
-    this.rectHeight = 0;
-    this.rectWidth = 0;
-    this.padding = 0;
+    this.rectHeight = 30;
+    this.rectWidth = 30;
+    this.padding = this.rectHeight / 10;
+    this.top = -1;
 
     var that = this;
-    
+
     this.mouseOver = function(d,i){
-      console.log("mouseOver"+i);
       d3.select("#elemIdx_"+i)
         //.attr("temp",function(){console.log(i);})
         .attr("fill","#9598AB")
@@ -52,7 +50,7 @@
       .attr("id","arrow")
       .attr("x", that.width/2+that.rectWidth/2 + 10)
       .attr("y",that.height-(that.rectHeight+that.padding)*(i+1)+that.rectHeight/3*2);
-      
+
 
       that.svg.append("text")
           .text(function(){return "stack["+i+"] = " + that.data[i].text;})
@@ -62,7 +60,7 @@
           .attr("font-size",(that.rectHeight / 2)+"px")
           .attr("fill",that.data[i].color)
           //.attr("text-anchor","middle")
-          .attr("id","stackInfo")
+          .attr("id","stackInfo");
     };
 
     this.mouseOut = function(d,i){
@@ -72,33 +70,23 @@
          .attr("width",that.rectWidth)
          .attr("height",that.rectHeight)
          .attr("transform","translate(0,0)");
-      
+
       d3.select("#arrow").remove();
       d3.select("#stackInfo").remove();
     };
 
   }
 
-  Stack.prototype.init = function (size) {
-    this.top = -1;
-    this.rectWidth = Math.ceil(this.width/10);
-    this.rectHeight = Math.ceil(this.height/(size+size/10));
-
-    this.padding = this.rectHeight/10;
-
-   
-  };
-
   Stack.prototype.redrawStack = function () {
     var that = this;
-    this.clear();
+    this.svg.selectAll(".stack").remove();
 
     var rectWidth = this.rectWidth;
     var rectHeight = this.rectHeight;
 
     var ele = this.svg.append('g')
     .attr("class", "stack");
-    
+
 
 
     var cells = ele.selectAll(".elem")
@@ -107,9 +95,9 @@
       .append("g")
       //.attr("id", function (d, i) { return "elemIdx_" + i;})
       .attr("class", "elem");
-      
-      
-      
+
+
+
     cells.append("rect")
       .attr("fill", function (d) { return d.background;})
       .attr("x", that.width/2-rectWidth/2)
@@ -121,7 +109,7 @@
       .attr("id", function (d, i) { return "elemIdx_" + i;})
       .on("mouseover",this.mouseOver)
       .on("mouseout",this.mouseOut);
-      
+
 
       console.log(rectHeight/3);
       cells.append("text")
@@ -133,7 +121,7 @@
       .attr("fill", function (d) { return d.color; })
       .text(function (d) {  return d.text; });
   };
-  
+
   Stack.prototype.push = function(val) {
     this.top++;
     this.data[this.top] = {
@@ -166,8 +154,8 @@
             .attr("font-family","Arial")
             .attr("font-size", (that.rectHeight / 3)+"px" )
             .attr("fill",this.data[this.top].color);
-    
-    
+
+
     newElem.transition()
             .attr("transform","translate(0,"+distance+")").duration(500).ease(d3.easeSinOut);
 
@@ -179,6 +167,7 @@
 
   Stack.prototype.pop = function(){
     var top = this.top;
+    if (top < 0) return;
     var val = this.data[top];
     var newElem = this.svg.append("g");
     var that = this;
@@ -216,6 +205,8 @@
 
   Stack.prototype.clear = function () {
     this.svg.selectAll(".stack").remove();
+    this.top = -1;
+    this.data = [];
   };
 
   Stack.prototype.setData = function (idx, val) {
@@ -259,6 +250,6 @@
       });
   };
 
-  window.thisplay.Stack = Stack;
+  thisplay.Stack = Stack;
 
-})(window, window.d3);
+})(thisplay, d3);

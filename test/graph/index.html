@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Graph</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=11" />
+  <meta charset="UTF-8" />
+
+  <style>
+    input {width: 100px;}
+
+    .test_svg {
+      width: 800px;
+      height: 450px;
+      border: 1px solid black;
+    }
+  </style>
+  <link rel="stylesheet" href="../../src/graph/graph.css" />
+
+  <script src="../../bower_components/d3/d3.js"></script>
+  <script src="../../src/core.js"></script>
+  <script src="../../src/graph/graph.js"></script>
+</head>
+
+<body>
+  <svg class="test_svg" id="canvas" />
+  <hr/>
+
+  <button onClick="btnInitClk()">init</button>
+  <input type="text" id="init_size" placeholder="size" />
+  <p/>
+  <button onClick="btnMakeNodeClk()">makeNode</button>
+  <input type="text" id="makeNode_id" placeholder="id" />
+  <p/>
+  <button onClick="btnMakeEdgeClk()">makeEdge</button>
+  <input type="text" id="source" placeholder="source" />
+  <input type="text" id="target" placeholder="target" />
+  <input type="text" id="value" placeholder="value" />
+  <p/>
+  <button onClick="btnHighlightNode()">highlightNode</button>
+  <input type="text" id="highlightNode_idx" placeholder="idx" />
+  <p/>
+  <button onClick="btnHighlightEdge()">highlightEdge</button>
+  <input type="text" id="highlightEdge_src" placeholder="src" />
+  <input type="text" id="highlightEdge_trg" placeholder="trg" />
+  <p/>
+  
+  <button onClick="btnUnHighlightNode()">unHighlightNode</button>
+  <input type="text" id="unHighlightNode_idx" placeholder="idx" />
+  <p/>
+  
+  <button onClick="btnUnHighlightEdge()">unHighlightEdge</button>
+  <input type="text" id="unHighlightEdge_src" placeholder="src" />
+  <input type="text" id="unHighlightEdge_trg" placeholder="trg" />
+  <p/>
+    
+  <button onClick="btnUnHighlightNodeAll()">unHighlightNodeAll</button>
+  <p/>
+   
+  <button onClick="btnUnHighlightEdgeAll()">unHighlightEdgeAll</button>
+  <p/>
+  
+  
+  <button onClick="btnClearClk()">clear</button>
+  <p/>
+
+  <script> 
+    var graph = new thisplay.Graph('#canvas');
+
+    // graph.makeNode(3);
+    // graph.makeNode(4);
+    // graph.makeEdge(3, 4, 2);
+    
+    function btnInitClk() {
+      var size = document.getElementById('init_size').value;
+      graph.redraw();
+    }
+
+    function btnMakeNodeClk() {
+      var makeID = document.getElementById('makeNode_id').value;
+      graph.makeNode(Number(makeID));
+    }
+
+    function btnMakeEdgeClk() {
+      var source = document.getElementById('source').value;
+      var target = document.getElementById('target').value;
+      var value = document.getElementById('value').value;
+
+      if (value === '') {
+        graph.makeEdge(Number(source), Number(target));
+      } 
+      else {
+        graph.makeEdge(Number(source), Number(target), Number(value));
+      }
+    }
+
+    function btnHighlightNode() {
+      var idx = document.getElementById('highlightNode_idx').value;
+      graph.highlightNode(Number(idx));
+    }
+
+    function btnHighlightEdge() {
+      var src = document.getElementById('highlightEdge_src').value;
+      var trg = document.getElementById('highlightEdge_trg').value;
+      graph.highlightEdge(Number(src), Number(trg));
+    }
+
+    function btnUnHighlightNode() {
+      var idx = document.getElementById('unHighlightNode_idx').value;
+      graph.unHighlightNode(Number(idx));
+    }
+
+    function btnUnHighlightEdge() {
+      var src = document.getElementById('unHighlightEdge_src').value;
+      var trg = document.getElementById('unHighlightEdge_trg').value;
+      graph.unHighlightEdge(Number(src), Number(trg));
+    }
+   
+    function btnUnHighlightNodeAll() {
+      graph.unHighlightNodeAll();
+    }   
+
+    function btnUnHighlightEdgeAll() {
+      graph.unHighlightEdgeAll();
+    }
+    
+    function btnClearClk() {
+      graph.clear();
+    }
+    graph.makeNode(3);
+    graph.makeNode(4);
+    graph.makeEdge(3, 4, 2);
+    graph.makeNode(5);
+    graph.makeNode(6);
+    graph.makeEdge(3, 5 ,3);
+    graph.makeEdge(6, 5 ,3);
+    graph.highlightNode(6);
+    graph.highlightEdge(6, 5, 3);
+    graph.makeEdge(3, 4, 3);
+  </script>
+</body>
+
+</html>
