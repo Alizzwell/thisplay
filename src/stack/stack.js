@@ -108,6 +108,8 @@
   }
 
   Stack.prototype.init = function(size){
+    this.clear();
+    if (!size) return;
     this.top = -1;
    // this.rectWidth = Math.ceil(this.width/10);
     this.rectHeight = Math.ceil(this.height/(size+size/10));
@@ -193,7 +195,7 @@
             .attr("text-anchor", "middle")
             .attr("font-family","Arial")
             .attr("font-size", (that.rectHeight / 3)+"px" )
-            .attr("fill",this.data[this.top].color)
+            .attr("fill","white")
             .attr("id","newElemText");
 
 
@@ -248,6 +250,7 @@
 
     newElem.transition()
            .attr("transform","translate(0,"+distance+")").duration(500).ease(d3.easeSinOut);
+
 
     setTimeout(function(){
       newElem.remove().exit();
