@@ -296,13 +296,12 @@
   Graph.prototype.highlightEdge = function (source, target) {
    	var edge = this.svg.select("#link_" + source + "_" + target);
     var edge2 = this.svg.select("#link_" + target + "_" + source);
+		
     if(edge2.node() !== null)
       if(edge2.node().getAttribute("is_directed") !== "true") {{
-        edge = edge2;
+        edge2.transition().duration(500).style("stroke", "black");
       }
     }
-    console.log(edge.node());
-    console.log(edge2.node());
     if(edge.node() !== null) {
       edge.transition().duration(500).style("stroke", "black");
     }
