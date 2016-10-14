@@ -88,7 +88,7 @@
       var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
       return "M" + sx + "," + sy +
       "L" + tx + "," + ty ;
-    }
+    };
 
     var drawDirectedLine = function (d) {
       var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
@@ -296,7 +296,7 @@
   Graph.prototype.highlightEdge = function (source, target) {
    	var edge = this.svg.select("#link_" + source + "_" + target);
     var edge2 = this.svg.select("#link_" + target + "_" + source);
-    if(edge2.node() != null)
+    if(edge2.node() !== null)
       if(edge2.node().getAttribute("is_directed") !== "true") {{
         edge = edge2;
       }
@@ -312,15 +312,16 @@
     var snode = this.svgNode.select("#node_" + source).node();
     var tnode = this.svgNode.select("#node_" + target).node();
 
-    if(source == target || snode == null || tnode == null) return ;
+    if(source == target || snode === null || tnode === null) return ;
 
     for(var i = 0; i<this.links.length; i++){
       if(this.links[i].source == snode && this.links[i].target == tnode){
         console.log("1");
         this.links.splice(i, 1);
       }
-      else if(this.links[i].source == tnode && this.links[i].target == snode
-        && this.links[i].is_directed !== "true"){
+      else if(this.links[i].source == tnode &&
+				this.links[i].target == snode &&
+				this.links[i].is_directed !== "true"){
         console.log("2");
         this.links.splice(i, 1);
         this.svgLink.select("#link_" + target + "_" + source).remove();
@@ -333,7 +334,7 @@
     this.forceLink.links(this.links);
     this.force.alpha(1).restart();
     this.redraw();
-  }
+  };
 
   Graph.prototype.deleteNode = function (idx){
     for(var i=0; i<this.nodes.length; i++){
@@ -350,7 +351,7 @@
 
     this.force.nodes(this.nodes).alpha(1).restart();
     this.redraw();
-  }
+  };
 
   Graph.prototype.unHighlightNode = function (idx) {
    	var node = this.svg.select("#node_" + idx);
