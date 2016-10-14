@@ -160,55 +160,13 @@
 			that.drawQueue();
 		},300);
   };
-
+	
+	
 	Queue.prototype.clear = function () {
-
-    if(this.front == this.rear)
-			return ;
-		while(this.front != this.rear)
+		while(this.front < this.rear)
 		{
-			var that = this;
-			var newElem;
-			var _value = this.queueData[0];
-
-			this.front++;
-
-			this.queueData = this.queueData.slice(1,this.queueData.length);
-
-			this.drawQueue();
-
-			var position = (this.rectWidth + this.padding)*(-1)+100;
-			var distance = 300;
-
-			newElem = this.container.append("g");
-			 newElem.append("rect")
-				.attr("x", position)
-				.attr("y",300)
-				.attr("width", this.rectWidth)
-				.attr("height", this.rectHeight)
-				.attr("fill","#FAAF08")
-				.attr("rx",10)
-				.attr("ry",10);
-
-			newElem.append("text")
-				.text(_value)
-				.attr("x", position + that.rectWidth/2)
-				.attr("y", 300 + that.rectHeight/5 * 3)
-				.attr("fill","black")
-				.attr("font-family","Consolas")
-				.attr("font-size","20px")
-				.attr("text-anchor","middle");
-
-			//var distance = -300;
-			newElem.transition().duration(300)
-				.attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
-
-			//setTimeout(function(){
-				newElem.remove().exit();
-				that.drawQueue();
-			//},300);
+			this.Pop();	
 		}
-
   };
 	
 	Queue.prototype.init = function () {
