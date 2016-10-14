@@ -15,6 +15,7 @@
 		var padding = 5;
 		var width = 1000;
 		var height = 700;
+		var popCount = 0;
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -33,6 +34,7 @@
 		this.rectWidth = rectWidth;
 		this.rectHeight = rectHeight;
 		this.padding = padding;
+		this.popCount = popCount;
 
 
 		var that = this;
@@ -56,7 +58,7 @@
 				.attr("y",function(){return 300+that.rectHeight*1.3;});
 
 			that.queue.append("text")
-				.text(function(){return "queue["+(i+that.front)+"] = "+ that.queueData[i];})
+				.text(function(){return "queue["+(i+that.popCount)+"] = "+ that.queueData[i];})
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
@@ -120,6 +122,7 @@
     if(this.front == this.rear)
 			return ;
 
+		this.popCount++;
 		var newElem;
 		var _value = this.queueData[0];
 
@@ -161,56 +164,21 @@
 		},300);
   };
 
+
 	Queue.prototype.clear = function () {
-
-    if(this.front == this.rear)
-			return ;
-		while(this.front != this.rear)
+		while(this.front < this.rear)
 		{
-			var that = this;
-			var newElem;
-			var _value = this.queueData[0];
-
-			this.front++;
-
-			this.queueData = this.queueData.slice(1,this.queueData.length);
-
-			this.drawQueue();
-
-			var position = (this.rectWidth + this.padding)*(-1)+100;
-			var distance = 300;
-
-			newElem = this.container.append("g");
-			 newElem.append("rect")
-				.attr("x", position)
-				.attr("y",300)
-				.attr("width", this.rectWidth)
-				.attr("height", this.rectHeight)
-				.attr("fill","#FAAF08")
-				.attr("rx",10)
-				.attr("ry",10);
-
-			newElem.append("text")
-				.text(_value)
-				.attr("x", position + that.rectWidth/2)
-				.attr("y", 300 + that.rectHeight/5 * 3)
-				.attr("fill","black")
-				.attr("font-family","Consolas")
-				.attr("font-size","20px")
-				.attr("text-anchor","middle");
-
-			//var distance = -300;
-			newElem.transition().duration(300)
-				.attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
-
-			//setTimeout(function(){
-				newElem.remove().exit();
-				that.drawQueue();
-			//},300);
+			this.pop();
 		}
-
   };
-	
+
+	Queue.prototype.init = function () {
+		this.clear();
+		this.front = 0;
+		this.rear = 0;
+		this.drawQueue();
+  };
+
 	Queue.prototype.init = function () {
 		this.Clear();
 		this.front = 0;
@@ -224,7 +192,7 @@
     if(this.queue !== undefined){
 			this.queue.remove().exit();
 		}
-		
+
 		this.queue = this.container.append("g");
 
 		if(this.queueData.length === 0)
@@ -235,27 +203,25 @@
 				.attr("font-size","20px")
 				.attr("fill","black")
 				.attr("text-anchor","middle")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.2;})
-			
+				.attr("x",function(){return 100 +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.2;});
 			this.queue.append("text")
 				.text("front")
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
 				.attr("text-anchor","middle")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.5;})
-			
+				.attr("x",function(){return 100 +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.5;});
+
 			this.queue.append("text")
 				.text("rear")
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
 				.attr("text-anchor","middle")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.rear +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.8;})
-			
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.8;});
 			return ;
 		}
 
