@@ -176,13 +176,7 @@
 		this.clear();
 		this.front = 0;
 		this.rear = 0;
-		this.drawQueue();
-  };
-
-	Queue.prototype.init = function () {
-		this.Clear();
-		this.front = 0;
-		this.rear = 0;
+		this.popCount = 0;
 		this.drawQueue();
   };
 
