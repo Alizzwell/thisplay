@@ -1,5 +1,5 @@
 .thisplay-graph .node {
-	fill: black;
+	fill: #0aa;
 	stroke: white;
 	stroke-width : 3px;
 }
@@ -15,7 +15,7 @@
 }
 
 .thisplay-graph .link {
-  stroke: #999;
+  stroke: #ccc;
   stroke-width: 15;
   cursor: crosshair;
 }

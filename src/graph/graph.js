@@ -19,26 +19,29 @@
     var width = 700;
     var height = 1000;
     var radius = 50;
-
+    
     var nodes = [];
 	  var links = [];
 
+    var default_node_color = "#0aa";
+    var default_link_color = "#ccc";
+    
     var forceManyBody = d3.forceManyBody()
-        .strength(-3500)
-      //  .theta(0.9) // need to test
+        .strength(-3000)
+        .theta(0.9) // need to test
         .distanceMin(100) // ntt
         .distanceMax(1000); // ntt
 
     var forceLink = d3.forceLink();
     forceLink
       .links(links)
-      .distance(300) // ntt
-      .strength(-200) // ntt
-      .iterations(0.5); // ntt
+      .distance(500) // ntt
+      .strength(-2000) // ntt
+      .iterations(0.8); // ntt
 
     var forceCollide = d3.forceCollide()
-    .radius(width/2)
-    .strength(0.7)
+    .radius(radius)
+    .strength(0.9)
     .iterations(1);
 
     var	force = d3.forceSimulation();
@@ -50,10 +53,10 @@
       .force("center", d3.forceCenter(width/2, height/2))
       .force("collide", forceCollide)
       .force("x", d3.forceX().strength(0.05))
-      .force("y", d3.forceY().strength(0.1))
+      .force("y", d3.forceY().strength(0.05))
       .alphaMin(0.2)
-      .alphaDecay(0.05)
-      .velocityDecay(0.85)
+      .alphaDecay(0.1)
+      .velocityDecay(0.4)
       .on("tick", function () {
         svgNode.selectAll(".node")
           .attr("transform", function(d) { return 'translate(' + [d.x , d.y] + ')' ;})
@@ -62,18 +65,19 @@
 
         svgNode.selectAll(".nodetext")
           .attr("transform", function(d) {
-            return 'translate(' + [d.x, d.y+10] + ')' ;
+            return 'translate(' + [d.x, d.y+15] + ')' ;
           });
 
         svgLink.selectAll(".link")
           .attr("d", function(d) {
-            if(d.is_directed === true) return drawDirectedLine(d);
+            if(d.is_directed === "true") return drawDirectedLine(d);
             else return drawUnDirectedLine(d);
         });
 
 				svgLink.selectAll(".linktext")
           .attr("transform", function(d){
-            return drawText(d);
+            if(d.is_directed === "true") return drawDirectedText(d);
+            else return drawUnDirectedText(d);
         });
       });
 
@@ -85,24 +89,21 @@
       return "M" + sx + "," + sy + 
       "L" + tx + "," + ty ;
     }
-
-
+    
     var drawDirectedLine = function (d) {
       var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
       var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
       var dx = tx - sx;
       var dy = ty - sy;
-      dx = dx * 3;
-			dy = dy * 3;
       var dr = Math.sqrt(dx * dx + dy * dy);
-      var theta = Math.atan2(dy, dx) + 0.2;
+      var theta = Math.atan2(dy, dx) + 0.1;
 			var d90 = Math.PI / 2;
       var dtxs = tx - 1.43 * radius * Math.cos(theta);
       var dtys = ty - 1.43 * radius * Math.sin(theta);
       var val1 = 3.5, val2 = 8.5;
       return "M" + sx + "," + sy +
-	      "A" + dr + "," + dr + " 0 0 1," + dtxs + "," + dtys +
-	      "A" + dr + "," + dr + " 0 0 0," + sx + "," + sy +
+	      "A" + 1.5*dr + "," + 1.5*dr + " 0 0 1," + dtxs + "," + dtys +
+	      "A" + 1.5*dr + "," + 1.5*dr + " 0 0 0," + sx + "," + sy +
 	      "M" + dtxs + "," + dtys +
 	      "l" + (val1 * Math.cos(d90 - theta) - val2 * Math.cos(theta)) + "," +
 	      (-val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) +
@@ -110,19 +111,34 @@
 	      (dtys + val1 * Math.sin(d90 - theta) - val2 * Math.sin(theta)) + "z";
     };
 
-    var drawText = function(d){
+    var drawDirectedText = function(d){
       var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
       var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
       var dx = tx - sx;
       var dy = ty - sy;
       var dr = Math.sqrt(dx * dx + dy * dy),
-        theta = Math.atan2(dy, dx) + 0.3,
-        dtxs = tx - 5 * radius * Math.cos(theta),
-        dtys = ty - 5 * radius * Math.sin(theta);
+        theta = Math.atan2(dy, dx),
+        d90 = Math.PI / 2;
+      var cx = tx - dr/2* Math.cos(theta),
+          cy = ty - dr/2* Math.sin(theta);
 
-        return 'translate(' + [dtxs, dtys] + ')';
+      return 'translate(' + [cx + 70 * Math.cos(d90-theta),
+          cy - 70 * Math.sin(d90-theta)] + ')';
     };
-
+    
+    var drawUnDirectedText = function(d){
+      var sx = Number(d.source.getAttribute("x"));
+      var sy = Number(d.source.getAttribute("y"));
+      var tx = Number(d.target.getAttribute("x"));
+      var ty = Number(d.target.getAttribute("y"));
+      var dx = tx - sx;
+      var dy = ty - sy;
+      var theta = Math.atan2(dy, dx);
+			var d90 = Math.PI / 2;
+      
+      return 'translate(' + [(sx+tx)/2 - 45*Math.cos(d90-theta), (sy+ty)/2 + 45*Math.sin(d90-theta)] + ')';
+    };
+    
     this.target = target;
     this.svg = svg;
     this.svgNode = svgNode;
@@ -175,12 +191,15 @@
       .insert('text')
       .attr("class", "nodetext")
       .attr("id", function(d) { return "text" + d.id; })
-      .text(function(d) { return d.text; });
-
+      .text(function(d) { return d.text; })
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
 
     function dragstarted(d) {
       if (!d3.event.active) that.force.alpha(0.6).restart();
-      that.force.alpha(0.3);
+      that.force.alpha(0.6);
       d.fx = d.x;
       d.fy = d.y;
     }
@@ -214,14 +233,21 @@
     this.redraw();
   };
   
-  Graph.prototype.makeEdge = function (source, target, value) {
+  Graph.prototype.makeEdge = function (source, target, value, is_directed) {
     var that = this;
     var snode, tnode;
     var edge = this.svgLink.select("#link_" + source + "_" + target).node();
+    var tmp;
+    
+    if(source > target && is_directed !== "true"){
+      tmp = source;
+      source = target;
+      target = tmp;
+    }
     
     snode = this.svgNode.select("#node_" + source).node();
     tnode = this.svgNode.select("#node_" + target).node();
-
+ 
     if(source == target){
       // source == target
     }
@@ -234,7 +260,7 @@
         source : snode,
         target : tnode,
         value : value,
-        is_directed: true
+        is_directed: is_directed
       });
     }
     else{
@@ -255,67 +281,25 @@
     this.redraw();
   };
    
-  Graph.prototype.makeUnDirectedEdge = function (source, target, value) {
-    var that = this;
-    var snode, tnode;
-    var tmp;
-    
-    if(source > target){
-      tmp = source;
-      source = target;
-      target = tmp;
-    }
-    
-    var edge = this.svgLink.select("#link_" + source + "_" + target).node();
-    snode = this.svgNode.select("#node_" + source).node();
-    tnode = this.svgNode.select("#node_" + target).node();
-
-    if(snode === null || tnode === null){
-      // pr("no node");
-    }
-    else if(edge === null){
-      this.links.push({
-        id : "link_" + source + "_" + target,
-        source : snode,
-        target : tnode,
-        value : value,
-        is_directed: false
-      });
-    }
-    else{
-      for(var i = 0; i < this.links.length; i++){
-        if(this.links[i].id === "link_" + source + "_" + target){
-          this.links[i].value = value;
-          this.svgLink.select("#textlink_" + source + "_" + target).text(value);
-          break;
-        }
-      }
-    }
-
-    this.forceLink
-      .links(this.links);
-
-    this.force.alpha(1).restart();
-    this.redraw();
-   };
-   
   Graph.prototype.highlightNode = function (idx) {
    	var node = this.svg.select("#node_" + idx);
     if(node.node() !== null) {
-      node.transition().duration(500).style("fill", "red");
+      node.transition().duration(500).style("fill", "#F0F");
     }
   };
 
   Graph.prototype.highlightEdge = function (source, target) {
    	var edge = this.svg.select("#link_" + source + "_" + target); 
     var edge2 = this.svg.select("#link_" + target + "_" + source);
-    if(edge2.node() != null){
-      if(edge2.node().getAttribute("is_directed") === "false") {
+    if(edge2.node() != null)
+      if(edge2.node().getAttribute("is_directed") !== "true") {{
         edge = edge2;
       }
-    }    
+    }  
+    console.log(edge.node());
+    console.log(edge2.node());    
     if(edge.node() !== null) {
-      edge.transition().duration(500).style("stroke", "red");
+      edge.transition().duration(500).style("stroke", "black");
     }
   };
   
@@ -327,11 +311,12 @@
     
     for(var i = 0; i<this.links.length; i++){
       if(this.links[i].source == snode && this.links[i].target == tnode){
-         this.links.splice(i, 1);
+        console.log("1");
+        this.links.splice(i, 1);
       }
- 
-      if(this.links[i].source == tnode && this.links[i].target == snode 
-        && this.links[i].is_directed === false){
+      else if(this.links[i].source == tnode && this.links[i].target == snode 
+        && this.links[i].is_directed !== "true"){
+        console.log("2");
         this.links.splice(i, 1);
         this.svgLink.select("#link_" + target + "_" + source).remove();
         this.svgLink.select("#textlink_" + target + "_" + source).remove();
@@ -364,15 +349,21 @@
   
   Graph.prototype.unHighlightNode = function (idx) {
    	var node = this.svg.select("#node_" + idx);
-    if(node.node() !== null) {
-      node.transition().duration(500).style("fill", "black");
+    if(idx === undefined){
+      this.unHighlightNodeAll();
+    }
+    else if(node.node() !== null) {
+      node.transition().duration(500).style("fill", this.default_node_color);
     }
   };
 
   Graph.prototype.unHighlightEdge = function (source, target) {
    	var edge = this.svg.select("#link_" + source + "_" + target);
-    if(edge.node() !== null) {
-      edge.transition().duration(500).style("stroke", "#999");
+    if(source === undefined && target === undefined){
+      this.unHighlightEdgeAll();
+    }
+    else if(edge.node() !== null) {
+      edge.transition().duration(500).style("stroke", this.default_link_color);
     }
   };
   
@@ -385,7 +376,7 @@
   Graph.prototype.unHighlightEdgeAll = function () {
     for(var i = 0; i < this.links.length; i++){
       this.svg.select("#" + this.links[i].id)
-      .transition().duration(500).style("stroke", "#999");
+      .transition().duration(500).style("stroke", this.default_link_color);
     }
   };
 

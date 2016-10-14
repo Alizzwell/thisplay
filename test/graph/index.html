@@ -36,6 +36,7 @@
   <input type="text" id="makeEdge_src" placeholder="source" />
   <input type="text" id="makeEdge_trg" placeholder="target" />
   <input type="text" id="makeEdge_val" placeholder="value" />
+  <input type="text" id="makeEdge_is_directed" placeholder="is_directed" />
   <p/>
 
   <button onClick="btnMakeUndirectedEdgeClk()">makeUndirectedEdge</button>
@@ -69,13 +70,6 @@
   <input type="text" id="unHighlightEdge_trg" placeholder="trg" />
   <p/>
     
-  <button onClick="btnUnHighlightNodeAll()">unHighlightNodeAll</button>
-  <p/>
-   
-  <button onClick="btnUnHighlightEdgeAll()">unHighlightEdgeAll</button>
-  <p/>
-  
-  
   <button onClick="btnClearClk()">clear</button>
   <p/>
 
@@ -101,12 +95,12 @@
       var source = document.getElementById('makeEdge_src').value;
       var target = document.getElementById('makeEdge_trg').value;
       var value = document.getElementById('makeEdge_val').value;
-
+      var is_directed = document.getElementById('makeEdge_is_directed').value;
       if (value === '') {
-        graph.makeEdge(Number(source), Number(target));
+        graph.makeEdge(Number(source), Number(target), undefined, is_directed);
       } 
       else {
-        graph.makeEdge(Number(source), Number(target), Number(value));
+        graph.makeEdge(Number(source), Number(target), Number(value), is_directed);
       }
     }
     
@@ -146,31 +140,35 @@
     }
 
     function btnUnHighlightNode() {
-      var idx = document.getElementById('unHighlightNode_idx').value;
-      graph.unHighlightNode(Number(idx));
+      var idx = document.getElementById('unHighlightNode_idx').value;      
+      if (idx === '') {
+        graph.unHighlightNode();
+      } 
+      else graph.unHighlightNode(Number(idx));
     }
 
     function btnUnHighlightEdge() {
       var src = document.getElementById('unHighlightEdge_src').value;
       var trg = document.getElementById('unHighlightEdge_trg').value;
+      if (src === '' || trg === '') {
+        graph.unHighlightEdge();
+      } 
       graph.unHighlightEdge(Number(src), Number(trg));
     }
    
-    function btnUnHighlightNodeAll() {
-      graph.unHighlightNodeAll();
-    }   
-
-    function btnUnHighlightEdgeAll() {
-      graph.unHighlightEdgeAll();
-    }
-    
     function btnClearClk() {
       graph.clear();
     }
     graph.makeNode(1, 1);
     graph.makeNode(2, 2);
-    graph.makeNode(1, 1);
-    graph.makeUnDirectedEdge(1, 2, 1);
+    graph.makeNode(3, 3);
+    graph.makeNode(4, 4);
+    graph.makeNode(5, 5);
+    graph.makeNode(6, 6);
+    graph.makeNode(7, 7);
+    graph.makeEdge(1, 2, 1, "true");
+    graph.makeEdge(1, 3, 1, "false");
+    graph.highlightNode(1);
     
   </script>
 </body>
