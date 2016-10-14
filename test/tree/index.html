@@ -26,8 +26,8 @@
   <hr/>
   
   <button onClick="btnMakeNode()">makeNode</button>
+  <input type="text" id="makeNode_id" placeholder="id" />
   <input type="text" id="makeNode_val" placeholder="val" />
-  <input type="text" id="makeNode_idx" placeholder="idx" />
   <p/>
   <button onClick="btnConnect()">connect</button>
   <input type="text" id="connect_par" placeholder="par" />
@@ -39,8 +39,8 @@
     
     function btnMakeNode () {
       var val = document.getElementById('makeNode_val').value;
-      var idx = document.getElementById('makeNode_idx').value;
-      tree.makeNode(Number(idx), Number(val));
+      var id = document.getElementById('makeNode_id').value;
+      tree.makeNode(Number(id), Number(val));
     }
     
     function btnConnect () {
