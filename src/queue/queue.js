@@ -15,6 +15,7 @@
 		var padding = 5;
 		var width = 1000;
 		var height = 700;
+		var popCount = 0;
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -33,6 +34,7 @@
 		this.rectWidth = rectWidth;
 		this.rectHeight = rectHeight;
 		this.padding = padding;
+		this.popCount = popCount;
 
 
 		var that = this;
@@ -56,7 +58,7 @@
 				.attr("y",function(){return 300+that.rectHeight*1.3;});
 
 			that.queue.append("text")
-				.text(function(){return "queue["+(i)+"] = "+ that.queueData[i];})
+				.text(function(){return "queue["+(i+that.popCount)+"] = "+ that.queueData[i];})
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
@@ -120,6 +122,7 @@
     if(this.front == this.rear)
 			return ;
 
+		this.popCount++;
 		var newElem;
 		var _value = this.queueData[0];
 
@@ -165,12 +168,12 @@
 	Queue.prototype.clear = function () {
 		while(this.front < this.rear)
 		{
-			this.Pop();	
+			this.pop();	
 		}
   };
 	
 	Queue.prototype.init = function () {
-		this.Clear();
+		this.clear();
 		this.front = 0;
 		this.rear = 0;
 		this.drawQueue();
@@ -193,27 +196,26 @@
 				.attr("font-size","20px")
 				.attr("fill","black")
 				.attr("text-anchor","middle")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.2;})
-			
+				.attr("x",function(){return 100 +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.2;});
+
 			this.queue.append("text")
 				.text("front")
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
 				.attr("text-anchor","middle")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.front +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.5;})
-			
+				.attr("x",function(){return 100 +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.5;});
+
 			this.queue.append("text")
 				.text("rear")
 				.attr("font-family","Consolas")
 				.attr("font-size","20px")
 				.attr("fill","black")
 				.attr("text-anchor","middle")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*that.rear +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.8;})
-			
+				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
+				.attr("y",function(){return 300-that.rectHeight*0.8;});
 			return ;
 		}
 
