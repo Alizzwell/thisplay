@@ -16,16 +16,16 @@
 
     d3.select(target).call(zoom);
 
-    var width = 700;
-    var height = 1000;
+    var width = 500;
+    var height = 500;
     var radius = 50;
-    
+
     var nodes = [];
 	  var links = [];
 
     var default_node_color = "#0aa";
     var default_link_color = "#ccc";
-    
+
     var forceManyBody = d3.forceManyBody()
         .strength(-3000)
         .theta(0.9) // need to test
@@ -82,14 +82,14 @@
       });
 
 
-    
+
     var drawUnDirectedLine = function (d) {
       var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
       var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
-      return "M" + sx + "," + sy + 
+      return "M" + sx + "," + sy +
       "L" + tx + "," + ty ;
     }
-    
+
     var drawDirectedLine = function (d) {
       var sx = d.source.getAttribute("x"), sy = d.source.getAttribute("y");
       var tx = d.target.getAttribute("x"), ty = d.target.getAttribute("y");
@@ -125,7 +125,7 @@
       return 'translate(' + [cx + 70 * Math.cos(d90-theta),
           cy - 70 * Math.sin(d90-theta)] + ')';
     };
-    
+
     var drawUnDirectedText = function(d){
       var sx = Number(d.source.getAttribute("x"));
       var sy = Number(d.source.getAttribute("y"));
@@ -135,10 +135,10 @@
       var dy = ty - sy;
       var theta = Math.atan2(dy, dx);
 			var d90 = Math.PI / 2;
-      
+
       return 'translate(' + [(sx+tx)/2 - 45*Math.cos(d90-theta), (sy+ty)/2 + 45*Math.sin(d90-theta)] + ')';
     };
-    
+
     this.target = target;
     this.svg = svg;
     this.svgNode = svgNode;
@@ -155,7 +155,7 @@
 
   Graph.prototype.redraw = function () {
     var that = this;
-    
+
     // draw link tag
     this.svgLink.selectAll('.link')
       .data(this.links)
@@ -218,7 +218,12 @@
 
   Graph.prototype.makeNode = function (idx, text) {
     if(this.svgNode.select("#node_"+idx).node() === null) {
-      this.nodes.push({id: "node_" + idx, idx: idx, text: text});
+			var last = this.nodes.length - 1;
+
+      this.nodes.push({id: "node_" + idx, idx: idx, text: text,
+			x: (last < 0 ? this.width / 2 : this.nodes[last].x),
+			y: (last < 0 ? this.height / 2 : this.nodes[last].y)
+		});
     }
     else {
       for(var i = 0; i < this.nodes.length; i++){
@@ -232,22 +237,22 @@
     this.force.nodes(this.nodes).alpha(1).restart();
     this.redraw();
   };
-  
+
   Graph.prototype.makeEdge = function (source, target, value, is_directed) {
     var that = this;
     var snode, tnode;
     var edge = this.svgLink.select("#link_" + source + "_" + target).node();
     var tmp;
-    
+
     if(source > target && is_directed !== "true"){
       tmp = source;
       source = target;
       target = tmp;
     }
-    
+
     snode = this.svgNode.select("#node_" + source).node();
     tnode = this.svgNode.select("#node_" + target).node();
- 
+
     if(source == target){
       // source == target
     }
@@ -280,7 +285,7 @@
     this.force.restart();
     this.redraw();
   };
-   
+
   Graph.prototype.highlightNode = function (idx) {
    	var node = this.svg.select("#node_" + idx);
     if(node.node() !== null) {
@@ -289,47 +294,47 @@
   };
 
   Graph.prototype.highlightEdge = function (source, target) {
-   	var edge = this.svg.select("#link_" + source + "_" + target); 
+   	var edge = this.svg.select("#link_" + source + "_" + target);
     var edge2 = this.svg.select("#link_" + target + "_" + source);
     if(edge2.node() != null)
       if(edge2.node().getAttribute("is_directed") !== "true") {{
         edge = edge2;
       }
-    }  
+    }
     console.log(edge.node());
-    console.log(edge2.node());    
+    console.log(edge2.node());
     if(edge.node() !== null) {
       edge.transition().duration(500).style("stroke", "black");
     }
   };
-  
+
   Graph.prototype.deleteEdge = function (source, target){
     var snode = this.svgNode.select("#node_" + source).node();
     var tnode = this.svgNode.select("#node_" + target).node();
-    
+
     if(source == target || snode == null || tnode == null) return ;
-    
+
     for(var i = 0; i<this.links.length; i++){
       if(this.links[i].source == snode && this.links[i].target == tnode){
         console.log("1");
         this.links.splice(i, 1);
       }
-      else if(this.links[i].source == tnode && this.links[i].target == snode 
+      else if(this.links[i].source == tnode && this.links[i].target == snode
         && this.links[i].is_directed !== "true"){
         console.log("2");
         this.links.splice(i, 1);
         this.svgLink.select("#link_" + target + "_" + source).remove();
         this.svgLink.select("#textlink_" + target + "_" + source).remove();
       }
-    }    
-    
+    }
+
     this.svgLink.select("#link_" + source + "_" + target).remove();
     this.svgLink.select("#textlink_" + source + "_" + target).remove();
     this.forceLink.links(this.links);
     this.force.alpha(1).restart();
     this.redraw();
   }
-  
+
   Graph.prototype.deleteNode = function (idx){
     for(var i=0; i<this.nodes.length; i++){
       if(this.nodes[i].idx === idx){
@@ -342,11 +347,11 @@
         this.nodes.splice(i, 1);
       }
     }
-    
+
     this.force.nodes(this.nodes).alpha(1).restart();
     this.redraw();
   }
-  
+
   Graph.prototype.unHighlightNode = function (idx) {
    	var node = this.svg.select("#node_" + idx);
     if(idx === undefined){
@@ -366,7 +371,7 @@
       edge.transition().duration(500).style("stroke", this.default_link_color);
     }
   };
-  
+
   Graph.prototype.unHighlightNodeAll = function () {
     for(var i = 0; i < this.nodes.length; i++){
       this.unHighlightNode(this.nodes[i].idx);
