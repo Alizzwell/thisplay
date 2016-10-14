@@ -50,7 +50,7 @@
   };
   
   Tree.prototype.connect = function (parId, childId) {
-    var par, childIdx;
+    var par, parIdx, childIdx;
     var duration = 1000;
     var that = this;
     
@@ -65,8 +65,10 @@
         continue;
       
       par = this.findNode(this.data[i], parId);
-      if (par)
+      if (par) {
+        parIdx = i;
         break;
+      }
     }
     
     if (!par || childIdx === undefined) {
@@ -79,19 +81,19 @@
     par.children.push(this.data[childIdx]);
     this.data.splice(childIdx, 1);
     
-    this.connectAni(childIdx, duration);
+    this.connectAni(parIdx, childIdx, duration);
     
     setTimeout(function() {
       that.redraw();
     }, duration);
   };
   
-  Tree.prototype.connectAni = function (childIdx, duration) {
-    this.redrawTrans(duration);
+  Tree.prototype.connectAni = function (parIdx, childIdx, duration) {
+    this.redrawTrans(duration, parIdx);
     
     this.svg.selectAll(".trees")
       .transition().duration(duration)
-      .attr("opacity", function(d, i) { return i === childIdx ? 0 : 1; });
+      .attr("opacity", function(d, i) { return i === childIdx || i === parIdx ? 0 : 1; });
   };
   
   Tree.prototype.maxDepth = function (root) {
@@ -125,9 +127,11 @@
     return ret;
   };
   
-  Tree.prototype.redrawTrans = function (duration) {
+  Tree.prototype.redrawTrans = function (duration, idx) {
     var that = this;
     this.beforeTreeWidth = 0;
+    
+    console.log(idx);
     
     this.data.forEach(function (data, i) {
       var maxDepth = 0;
@@ -146,6 +150,10 @@
         .attr("opacity", 1)
         .attr("transform", function () { return "translate(" + that.beforeTreeWidth + ",0)"; });
       that.beforeTreeWidth += that.treeWidth * numLeaf;
+      
+      
+      if (idx !== undefined && idx !== i)
+        return;
         
       var link = g.selectAll(".link").data(nodes.descendants().slice(1));
       link.enter().append("path")
