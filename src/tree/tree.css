@@ -1,0 +1,11 @@
+.thisplay-tree .node {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.thisplay-tree .link {
+  fill: none;
+  stroke: #999;
+  stroke-width: 3px;
+}
