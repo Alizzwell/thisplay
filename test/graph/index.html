@@ -25,9 +25,6 @@
   <svg class="test_svg" id="canvas" />
   <hr/>
 
-  <button onClick="btnInitClk()">init</button>
-  <input type="text" id="init_size" placeholder="size" />
-  <p/>
   <button onClick="btnMakeNodeClk()">makeNode</button>
   <input type="text" id="makeNode_id" placeholder="id" />
   <input type="text" id="makeNode_text" placeholder="text" />
@@ -75,15 +72,6 @@
 
   <script> 
     var graph = new thisplay.Graph('#canvas');
-
-    // graph.makeNode(3);
-    // graph.makeNode(4);
-    // graph.makeEdge(3, 4, 2);
-    
-    function btnInitClk() {
-      var size = document.getElementById('init_size').value;
-      graph.redraw();
-    }
 
     function btnMakeNodeClk() {
       var id = document.getElementById('makeNode_id').value;
@@ -159,17 +147,7 @@
     function btnClearClk() {
       graph.clear();
     }
-    graph.makeNode(1, 1);
-    graph.makeNode(2, 2);
-    graph.makeNode(3, 3);
-    graph.makeNode(4, 4);
-    graph.makeNode(5, 5);
-    graph.makeNode(6, 6);
-    graph.makeNode(7, 7);
-    graph.makeEdge(1, 2, 1, "true");
-    graph.makeEdge(1, 3, 1, "false");
-    graph.highlightNode(1);
-    
+
   </script>
 </body>
 
