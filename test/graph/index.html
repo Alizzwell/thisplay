@@ -30,12 +30,29 @@
   <p/>
   <button onClick="btnMakeNodeClk()">makeNode</button>
   <input type="text" id="makeNode_id" placeholder="id" />
+  <input type="text" id="makeNode_text" placeholder="text" />
   <p/>
   <button onClick="btnMakeEdgeClk()">makeEdge</button>
-  <input type="text" id="source" placeholder="source" />
-  <input type="text" id="target" placeholder="target" />
-  <input type="text" id="value" placeholder="value" />
+  <input type="text" id="makeEdge_src" placeholder="source" />
+  <input type="text" id="makeEdge_trg" placeholder="target" />
+  <input type="text" id="makeEdge_val" placeholder="value" />
+  <input type="text" id="makeEdge_is_directed" placeholder="is_directed" />
   <p/>
+
+  <button onClick="btnMakeUndirectedEdgeClk()">makeUndirectedEdge</button>
+  <input type="text" id="makeUnDirectedEdge_src" placeholder="source" />
+  <input type="text" id="makeUnDirectedEdge_trg" placeholder="target" />
+  <input type="text" id="makeUnDirectedEdge_val" placeholder="value" />
+  <p/>
+  
+  <button onClick="btnDeleteNodeClk()">deleteNode</button>
+  <input type="text" id="deleteNode_id" placeholder="id" />
+  <p/>
+  <button onClick="btnDeleteEdgeClk()">deleteEdge</button>
+  <input type="text" id="deleteEdge_src" placeholder="source" />
+  <input type="text" id="deleteEdge_trg" placeholder="target" />
+  <p/>
+  
   <button onClick="btnHighlightNode()">highlightNode</button>
   <input type="text" id="highlightNode_idx" placeholder="idx" />
   <p/>
@@ -53,13 +70,6 @@
   <input type="text" id="unHighlightEdge_trg" placeholder="trg" />
   <p/>
     
-  <button onClick="btnUnHighlightNodeAll()">unHighlightNodeAll</button>
-  <p/>
-   
-  <button onClick="btnUnHighlightEdgeAll()">unHighlightEdgeAll</button>
-  <p/>
-  
-  
   <button onClick="btnClearClk()">clear</button>
   <p/>
 
@@ -76,23 +86,48 @@
     }
 
     function btnMakeNodeClk() {
-      var makeID = document.getElementById('makeNode_id').value;
-      graph.makeNode(Number(makeID));
+      var id = document.getElementById('makeNode_id').value;
+      var text = document.getElementById('makeNode_text').value;
+      graph.makeNode(Number(id), text);
     }
 
     function btnMakeEdgeClk() {
-      var source = document.getElementById('source').value;
-      var target = document.getElementById('target').value;
-      var value = document.getElementById('value').value;
-
+      var source = document.getElementById('makeEdge_src').value;
+      var target = document.getElementById('makeEdge_trg').value;
+      var value = document.getElementById('makeEdge_val').value;
+      var is_directed = document.getElementById('makeEdge_is_directed').value;
       if (value === '') {
-        graph.makeEdge(Number(source), Number(target));
+        graph.makeEdge(Number(source), Number(target), undefined, is_directed);
       } 
       else {
-        graph.makeEdge(Number(source), Number(target), Number(value));
+        graph.makeEdge(Number(source), Number(target), Number(value), is_directed);
       }
     }
+    
+    function btnMakeUndirectedEdgeClk() {
+      var source = document.getElementById('makeUnDirectedEdge_src').value;
+      var target = document.getElementById('makeUnDirectedEdge_trg').value;
+      var value = document.getElementById('makeUnDirectedEdge_val').value;
 
+      if (value === '') {
+        graph.makeUnDirectedEdge(Number(source), Number(target));
+      } 
+      else {
+        graph.makeUnDirectedEdge(Number(source), Number(target), Number(value));
+      }
+    }
+    
+    function btnDeleteNodeClk() {
+      var makeID = document.getElementById('deleteNode_id').value;
+      graph.deleteNode(Number(makeID));
+    }
+
+    function btnDeleteEdgeClk() {
+      var source = document.getElementById('deleteEdge_src').value;
+      var target = document.getElementById('deleteEdge_trg').value;
+      graph.deleteEdge(Number(source), Number(target));
+    }    
+   
     function btnHighlightNode() {
       var idx = document.getElementById('highlightNode_idx').value;
       graph.highlightNode(Number(idx));
@@ -105,37 +140,36 @@
     }
 
     function btnUnHighlightNode() {
-      var idx = document.getElementById('unHighlightNode_idx').value;
-      graph.unHighlightNode(Number(idx));
+      var idx = document.getElementById('unHighlightNode_idx').value;      
+      if (idx === '') {
+        graph.unHighlightNode();
+      } 
+      else graph.unHighlightNode(Number(idx));
     }
 
     function btnUnHighlightEdge() {
       var src = document.getElementById('unHighlightEdge_src').value;
       var trg = document.getElementById('unHighlightEdge_trg').value;
+      if (src === '' || trg === '') {
+        graph.unHighlightEdge();
+      } 
       graph.unHighlightEdge(Number(src), Number(trg));
     }
    
-    function btnUnHighlightNodeAll() {
-      graph.unHighlightNodeAll();
-    }   
-
-    function btnUnHighlightEdgeAll() {
-      graph.unHighlightEdgeAll();
-    }
-    
     function btnClearClk() {
       graph.clear();
     }
-    graph.makeNode(3);
-    graph.makeNode(4);
-    graph.makeEdge(3, 4, 2);
-    graph.makeNode(5);
-    graph.makeNode(6);
-    graph.makeEdge(3, 5 ,3);
-    graph.makeEdge(6, 5 ,3);
-    graph.highlightNode(6);
-    graph.highlightEdge(6, 5, 3);
-    graph.makeEdge(3, 4, 3);
+    graph.makeNode(1, 1);
+    graph.makeNode(2, 2);
+    graph.makeNode(3, 3);
+    graph.makeNode(4, 4);
+    graph.makeNode(5, 5);
+    graph.makeNode(6, 6);
+    graph.makeNode(7, 7);
+    graph.makeEdge(1, 2, 1, "true");
+    graph.makeEdge(1, 3, 1, "false");
+    graph.highlightNode(1);
+    
   </script>
 </body>
 
