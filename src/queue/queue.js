@@ -165,6 +165,7 @@
   };
 	
 	
+	
 	Queue.prototype.clear = function () {
 		while(this.front < this.rear)
 		{
@@ -172,10 +173,19 @@
 		}
   };
 	
+	Queue.prototype.setData = function(idx, value) {
+		if(idx - this.popCount >= 0 && idx - this.popCount < this.queueData.length) 
+		{
+			this.queueData[idx - this.popCount] = value;
+			this.drawQueue();
+		}
+	};
+	
 	Queue.prototype.init = function () {
 		this.clear();
 		this.front = 0;
 		this.rear = 0;
+		this.popCount = 0;
 		this.drawQueue();
   };
 
