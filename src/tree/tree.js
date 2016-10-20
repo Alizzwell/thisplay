@@ -12,6 +12,8 @@
     var data = [];
     var treeWidth = 60;
     var treeHeight = 80;
+    var nodeIds = {};
+    var h = [];
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -26,10 +28,16 @@
     this.treeWidth = treeWidth;
     this.treeHeight = treeHeight;
     this.beforeTreeWidth = 0;
+    this.nodeIds = nodeIds;
+    this.h = h;
   }
   
   Tree.prototype.makeNode = function(id, val) {
-    this.data.push({"val": val, "id": id, "par": -1, "children": []});
+    if (this.nodeIds[id])
+      return;
+    var newNode = {"val": val, "id": id, "children": []};
+    this.nodeIds[id] = newNode;
+    this.data.push(newNode);
     this.redraw();
   };
   
@@ -51,7 +59,7 @@
   
   Tree.prototype.connect = function (parId, childId) {
     var par, parIdx, childIdx;
-    var duration = 1000;
+    var duration = 1500;
     var that = this;
     
     this.data.forEach(function(d, i) { 
@@ -59,6 +67,7 @@
         childIdx = i;
       }
     });
+    
     
     for (var i = 0; i < this.data.length; i++) {
       if (i === childIdx)
@@ -72,28 +81,43 @@
     }
     
     if (!par || childIdx === undefined) {
-      console.log("no id");
-      console.log(par);
-      console.log(childIdx);
+      console.log("invalid id");
       return;
     }
+    
+    var parTreeTF = this.svg.select("#tree" + parIdx)
+      .attr("transform");
+    
+    var parNodeTF = this.svg.select("#node" + parId)
+      .attr("transform");
+      
+    var childNodeTF = this.svg.select("#node" + childId)
+      .attr("transform");
+      
+    function getTFArg1 (str) {
+      var a = str.substring(str.indexOf("(") + 1, str.indexOf(","));
+      return Number(a);
+    }
+    function getTFArg2 (str) {
+      var a = str.substring(str.indexOf(",") + 1, str.indexOf(")"));
+      return Number(a);
+    }
+    
+    var TF = "translate(" 
+      + (getTFArg1(parTreeTF) + getTFArg1(parNodeTF) - getTFArg1(childNodeTF)) + ","
+      + (getTFArg2(parTreeTF) + getTFArg2(parNodeTF) + this.treeHeight) + ")";
+      
+      
+    this.svg.select("#tree" + childIdx)
+      .transition().duration(duration)
+      .attr("transform", TF);
     
     par.children.push(this.data[childIdx]);
     this.data.splice(childIdx, 1);
     
-    this.connectAni(parIdx, childIdx, duration);
-    
     setTimeout(function() {
       that.redraw();
     }, duration);
-  };
-  
-  Tree.prototype.connectAni = function (parIdx, childIdx, duration) {
-    this.redrawTrans(duration, parIdx);
-    
-    this.svg.selectAll(".trees")
-      .transition().duration(duration)
-      .attr("opacity", function(d, i) { return i === childIdx || i === parIdx ? 0 : 1; });
   };
   
   Tree.prototype.maxDepth = function (root) {
@@ -126,52 +150,84 @@
     
     return ret;
   };
+    
+  Tree.prototype.highlight = function (id) {
+    this.h.push(id);
+    this.svg.select("#node" + id).select("circle")
+      .style("fill", "#f88")
+  };
   
-  Tree.prototype.redrawTrans = function (duration, idx) {
+  Tree.prototype.unhighlight = function (id) {
+    if (id === undefined) {
+      this.h = [];
+      this.svg.selectAll(".node")
+        .select("circle")
+        .style("fill", "#fff");
+    }
+    else {
+      var i;
+      for (i = 0; i < this.h.length; i++) {
+        if (this.h[i] === id)
+          break;
+      }
+      this.h.splice(i, 1);
+      this.svg.select("#node" + id).select("circle")
+        .style("fill", "#fff");
+    }
+  }
+  
+  Tree.prototype.recolor = function () {
+    this.svg.selectAll(".node")
+      .select("circle")
+      .style("fill", "#fff");
+    for (var i = 0; i < this.h.length; i++) {
+      var id = this.h[i];
+      this.svg.selectAll("#node" + id).select("circle")
+        .style("fill", "#f88")
+    }
+  };
+  
+  Tree.prototype.redraw = function () {
+    this.clearSVG();
+    
     var that = this;
     this.beforeTreeWidth = 0;
     
-    console.log(idx);
-    
-    this.data.forEach(function (data, i) {
-      var maxDepth = 0;
+    for (var i = 0; i < this.data.length; i++) {
+      var data = this.data[i];
       var tree = d3.tree();
       var nodes = d3.hierarchy(data, function (d) { return d.children; });
-      //console.log(nodes);
-      maxDepth = that.maxDepth(nodes);
-      var numLeaf = that.numLeaf(nodes);
+      var maxDepth = 0;
+      maxDepth = this.maxDepth(nodes);
+      var numLeaf = this.numLeaf(nodes);
       
-      tree.size([that.treeWidth * numLeaf, that.treeHeight * maxDepth]);
+      tree.size([this.treeWidth * numLeaf, this.treeHeight * maxDepth]);
       nodes = tree(nodes);
       
-      var g = that.svg//.selectAll(".trees")
+      var g = this.svg
         .append("g")
-        .attr("class", "trees")
+        .attr("class", "tree")
+        .attr("id", function () { return "tree" + i; })
         .attr("opacity", 1)
         .attr("transform", function () { return "translate(" + that.beforeTreeWidth + ",0)"; });
-      that.beforeTreeWidth += that.treeWidth * numLeaf;
-      
-      
-      if (idx !== undefined && idx !== i)
-        return;
+      this.beforeTreeWidth += this.treeWidth * numLeaf;
         
       var link = g.selectAll(".link").data(nodes.descendants().slice(1));
       link.enter().append("path")
         .attr("class", "link")
-        .attr("opacity", 0)
         .attr("d", function(d) {
           return "M" + d.x + "," + d.y
             + "C" + d.x + "," + (d.y + d.parent.y) / 2
             + " " + d.parent.x + "," + (d.y + d.parent.y) / 2
             + " " + d.parent.x + "," + d.parent.y;
         })
-        .transition().duration(duration)
         .attr("opacity", 1);
       
       var node = g.selectAll(".node").data(nodes.descendants());
       var nodeEnter = node.enter().append("g")
         .attr("class", "node")
-        .attr("opacity", 0)
+        .attr("id", function (d) { return "node" + d.data.id; })
+        .attr("opacity", 1)
         .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
         
       nodeEnter.append("circle")
@@ -180,25 +236,20 @@
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "central")
         .text(function (d) { return d.data.val; });
-        
-      nodeEnter.transition().duration(duration)
-        .attr("opacity", 1);
-    });
-  };
-  
-  Tree.prototype.redraw = function () {
-    this.clearSVG();
+    }
     
-    this.redrawTrans(0);
+    this.recolor();
   };
   
   Tree.prototype.clear = function () {
     this.data = [];
+    this.h = [];
+    this.nodeIds = {};
     this.redraw();
   };
   
   Tree.prototype.clearSVG = function () {
-    this.svg.selectAll(".trees").remove();
+    this.svg.selectAll(".tree").remove();
   };
   
   window.thisplay.Tree = Tree;
