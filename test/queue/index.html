@@ -34,6 +34,10 @@
   <p/>
   <button onClick="btnPopClk()">Pop</button>
   <p/>
+	<button onClick="btnSetDataClk()">Set Data</button>
+  <input type="text" id="setDataIdx" placeholder="Index" />
+  <input type="text" id="setDataValue" placeholder="Value" />
+  <p/>
   <button onClick="btnClearClk()">Clear</button>
   <p/>
 
@@ -52,7 +56,13 @@
     function btnPopClk() {
       queue.pop();
     }
-
+		
+		function btnSetDataClk() {
+      var idx = document.getElementById('setDataIdx').value;
+      var value = document.getElementById('setDataValue').value;
+      queue.setData(Number(idx), Number(value));
+    }
+		
 		function btnClearClk() {
       queue.clear();
     }

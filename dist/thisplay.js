@@ -988,23 +988,23 @@
 })(thisplay, d3);
 
 ;(function (thisplay, d3) {
-	'use strict';
+    'use strict';
 
-	function Queue(target) {
-		var svg = d3.select(target).append("g")
+    function Queue(target) {
+        var svg = d3.select(target).append("g")
       .attr("class", "thisplay-chart")
       .attr("transform", "translate(25, 25)");
 
-		var queue;
-		var queueData = [];
-		var front = 0;
-		var rear = 0;
-		var rectWidth = 80;
-		var rectHeight = 80;
-		var padding = 5;
-		var width = 1000;
-		var height = 700;
-		var popCount = 0;
+        var queue;
+        var queueData = [];
+        var front = 0;
+        var rear = 0;
+        var rectWidth = 80;
+        var rectHeight = 80;
+        var padding = 5;
+        var width = 1000;
+        var height = 700;
+        var popCount = 0;
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -1014,265 +1014,269 @@
 
     d3.select(target).call(zoom);
 
-		this.container = svg;
-		this.target = target;
-		this.queue = queue;
-		this.queueData = queueData;
-		this.front = front;
-		this.rear = rear;
-		this.rectWidth = rectWidth;
-		this.rectHeight = rectHeight;
-		this.padding = padding;
-		this.popCount = popCount;
+        this.container = svg;
+        this.target = target;
+        this.queue = queue;
+        this.queueData = queueData;
+        this.front = front;
+        this.rear = rear;
+        this.rectWidth = rectWidth;
+        this.rectHeight = rectHeight;
+        this.padding = padding;
+        this.popCount = popCount;
 
 
-		var that = this;
-		this.mouseOver = function (d,i) {
+        var that = this;
+        this.mouseOver = function (d,i) {
 
-			d3.select("#rectIdx"+i)
-				.attr("fill","#FA812F")
-				.attr("width", that.rectWidth*1.1)
-				.attr("height", that.rectHeight*1.1)
-				.attr("transform","translate("+(-that.rectHeight*0.05)+","+(-that.rectWidth*0.05)+")");
+            d3.select("#rectIdx"+i)
+                .attr("fill","#FA812F")
+                .attr("width", that.rectWidth*1.1)
+                .attr("height", that.rectHeight*1.1)
+                .attr("transform","translate("+(-that.rectHeight*0.05)+","+(-that.rectWidth*0.05)+")");
 
 
-			that.queue.append("text")
-				.text("↑")
-				.attr("font-family","Consolas")
-				.attr("font-size","20px")
-				.attr("fill","black")
-				.attr("text-anchor","middle")
-				.attr("id","arrow")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
-				.attr("y",function(){return 300+that.rectHeight*1.3;});
+            that.queue.append("text")
+                .text("↑")
+                .attr("font-family","Consolas")
+                .attr("font-size","20px")
+                .attr("fill","black")
+                .attr("text-anchor","middle")
+                .attr("id","arrow")
+                .attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
+                .attr("y",function(){return 300+that.rectHeight*1.3;});
 
-			that.queue.append("text")
-				.text(function(){return "queue["+(i+that.popCount)+"] = "+ that.queueData[i];})
-				.attr("font-family","Consolas")
-				.attr("font-size","20px")
-				.attr("fill","black")
-				.attr("text-anchor","middle")
-				.attr("id","arrInfo")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
-				.attr("y",function(){return 300+that.rectHeight*1.6;});
-		};
+            that.queue.append("text")
+                .text(function(){return "queue["+(i+that.popCount)+"] = "+ that.queueData[i];})
+                .attr("font-family","Consolas")
+                .attr("font-size","20px")
+                .attr("fill","black")
+                .attr("text-anchor","middle")
+                .attr("id","arrInfo")
+                .attr("x",function(){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
+                .attr("y",function(){return 300+that.rectHeight*1.6;});
+        };
 
-		this.mouseOut = function (d,i) {
-			d3.select(this)
-				.attr("fill","#FAAF08")
-				.attr("width",that.rectWidth)
-				.attr("height",that.rectHeight)
-				.attr("transform","translate(0,0)");
+        this.mouseOut = function (d,i) {
+            d3.select(this)
+                .attr("fill","#FAAF08")
+                .attr("width",that.rectWidth)
+                .attr("height",that.rectHeight)
+                .attr("transform","translate(0,0)");
 
-			d3.select("#arrInfo").remove();
-			d3.select("#arrow").remove();
-		};
+            d3.select("#arrInfo").remove();
+            d3.select("#arrow").remove();
+        };
   }
 
   Queue.prototype.push = function (_value) {
-		var newElem;
+        var newElem;
 
-		this.rear++;
-		this.queueData.push(_value);
+        this.rear++;
+        this.queueData.push(_value);
 
-		var position = (this.rectWidth+this.padding)*((this.rear-this.front)-1)+100;
-		var distance = 300;
-		var that = this;
-		newElem = this.container.append("g");
-		newElem.append("rect")
-			.attr("x", position + distance)
-			.attr("y",300)
-			.attr("width", this.rectWidth)
-			.attr("height",this.rectHeight)
-			.attr("fill","#FAAF08")
-			.attr("rx",10)
-			.attr("ry",10);
+        var position = (this.rectWidth+this.padding)*((this.rear-this.front)-1)+100;
+        var distance = 300;
+        var that = this;
+        newElem = this.container.append("g");
+        newElem.append("rect")
+            .attr("x", position + distance)
+            .attr("y",300)
+            .attr("width", this.rectWidth)
+            .attr("height",this.rectHeight)
+            .attr("fill","#FAAF08")
+            .attr("rx",10)
+            .attr("ry",10);
 
-		newElem.append("text")
-			.text(_value)
-			.attr("x",function(){return position+distance+that.rectWidth/2;})
-		 	.attr("y",function(){return 300+that.rectHeight/5*3;})
-			.attr("fill","black")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("text-anchor","middle");
+        newElem.append("text")
+            .text(_value)
+            .attr("x",function(){return position+distance+that.rectWidth/2;})
+            .attr("y",function(){return 300+that.rectHeight/5*3;})
+            .attr("fill","black")
+            .attr("font-family","Consolas")
+            .attr("font-size","20px")
+            .attr("text-anchor","middle");
 
-		newElem.transition().duration(300)
-			.attr("transform","translate("+(-distance)+",0)").ease(d3.easeSinOut);
+        newElem.transition().duration(300)
+            .attr("transform","translate("+(-distance)+",0)").ease(d3.easeSinOut);
 
-		setTimeout(function(){
-			newElem.remove().exit();
-			that.drawQueue();
-		},300);
+        setTimeout(function(){
+            newElem.remove().exit();
+            that.drawQueue();
+        },300);
   };
 
   Queue.prototype.pop = function () {
-		var that = this;
+        var that = this;
     if(this.front == this.rear)
-			return ;
+            return ;
 
-		this.popCount++;
-		var newElem;
-		var _value = this.queueData[0];
+        this.popCount++;
+        var newElem;
+        var _value = this.queueData[0];
 
-		this.front++;
+        this.front++;
 
-		this.queueData = this.queueData.slice(1,this.queueData.length);
+        this.queueData = this.queueData.slice(1,this.queueData.length);
 
-		this.drawQueue();
+        this.drawQueue();
 
-		var position = (this.rectWidth + this.padding)*(-1)+100;
-		var distance = 300;
+        var position = (this.rectWidth + this.padding)*(-1)+100;
+        var distance = 300;
 
-		newElem = this.container.append("g");
-		 newElem.append("rect")
-			.attr("x", position)
-		 	.attr("y",300)
-			.attr("width", this.rectWidth)
-			.attr("height", this.rectHeight)
-			.attr("fill","#FAAF08")
-			.attr("rx",10)
-			.attr("ry",10);
+        newElem = this.container.append("g");
+         newElem.append("rect")
+            .attr("x", position)
+            .attr("y",300)
+            .attr("width", this.rectWidth)
+            .attr("height", this.rectHeight)
+            .attr("fill","#FAAF08")
+            .attr("rx",10)
+            .attr("ry",10);
 
-		newElem.append("text")
-			.text(_value)
-			.attr("x",function(){return position + that.rectWidth/2;})
-		 	.attr("y",function(){return 300 + that.rectHeight/5*3;})
-			.attr("fill","black")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("text-anchor","middle");
+        newElem.append("text")
+            .text(_value)
+            .attr("x",function(){return position + that.rectWidth/2;})
+            .attr("y",function(){return 300 + that.rectHeight/5*3;})
+            .attr("fill","black")
+            .attr("font-family","Consolas")
+            .attr("font-size","20px")
+            .attr("text-anchor","middle");
 
-		//var distance = -300;
-		newElem.transition().duration(300)
-			.attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
+        //var distance = -300;
+        newElem.transition().duration(300)
+            .attr("transform","translate("+ (-distance)+",0)").ease(d3.easeSinOut);
 
-		setTimeout(function(){
-			newElem.remove().exit();
-			that.drawQueue();
-		},300);
+        setTimeout(function(){
+            newElem.remove().exit();
+            that.drawQueue();
+        },300);
   };
-
-
-	Queue.prototype.clear = function () {
-		while(this.front < this.rear)
-		{
-			this.pop();
-		}
+    Queue.prototype.clear = function () {
+        while(this.front < this.rear)
+        {
+            this.pop();
+        }
   };
-
-	Queue.prototype.init = function () {
-		this.clear();
-		this.front = 0;
-		this.rear = 0;
-		this.popCount = 0;
-		this.drawQueue();
+    Queue.prototype.setData = function(idx, value) {
+        if(idx - this.popCount >= 0 && idx - this.popCount < this.queueData.length) 
+        {
+            this.queueData[idx - this.popCount] = value;
+            this.drawQueue();
+        }
+    };
+    Queue.prototype.init = function () {
+        this.clear();
+        this.front = 0;
+        this.rear = 0;
+        this.popCount = 0;
+        this.drawQueue();
   };
 
   Queue.prototype.drawQueue = function () {
-		var that = this;
+        var that = this;
 
     if(this.queue !== undefined){
-			this.queue.remove().exit();
-		}
+            this.queue.remove().exit();
+        }
 
-		this.queue = this.container.append("g");
+        this.queue = this.container.append("g");
 
-		if(this.queueData.length === 0)
-		{
-			this.queue.append("text")
-				.text("▼▼")
-				.attr("font-family","Consolas")
-				.attr("font-size","20px")
-				.attr("fill","black")
-				.attr("text-anchor","middle")
-				.attr("x",function(){return 100 +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.2;});
-			this.queue.append("text")
-				.text("front")
-				.attr("font-family","Consolas")
-				.attr("font-size","20px")
-				.attr("fill","black")
-				.attr("text-anchor","middle")
-				.attr("x",function(){return 100 +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.5;});
+        if(this.queueData.length === 0)
+        {
+            this.queue.append("text")
+                .text("▼▼")
+                .attr("font-family","Consolas")
+                .attr("font-size","20px")
+                .attr("fill","black")
+                .attr("text-anchor","middle")
+                .attr("x",function(){return 100 +that.rectWidth/2;})
+                .attr("y",function(){return 300-that.rectHeight*0.2;});
+            this.queue.append("text")
+                .text("front")
+                .attr("font-family","Consolas")
+                .attr("font-size","20px")
+                .attr("fill","black")
+                .attr("text-anchor","middle")
+                .attr("x",function(){return 100 +that.rectWidth/2;})
+                .attr("y",function(){return 300-that.rectHeight*0.5;});
 
-			this.queue.append("text")
-				.text("rear")
-				.attr("font-family","Consolas")
-				.attr("font-size","20px")
-				.attr("fill","black")
-				.attr("text-anchor","middle")
-				.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
-				.attr("y",function(){return 300-that.rectHeight*0.8;});
-			return ;
-		}
+            this.queue.append("text")
+                .text("rear")
+                .attr("font-family","Consolas")
+                .attr("font-size","20px")
+                .attr("fill","black")
+                .attr("text-anchor","middle")
+                .attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
+                .attr("y",function(){return 300-that.rectHeight*0.8;});
+            return ;
+        }
 
-		this.queue.selectAll("g.rect")
-			.data(this.queueData)
-			.enter()
-			.append("rect")
-			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(i);})
-			.attr("y",300)
-			.attr("width", this.rectWidth)
-			.attr("height", this.rectHeight)
-			.attr("rx",10)
-			.attr("ry",10)
-			.attr("fill","#FAAF08")
-			.attr("id",function(d,i){return "rectIdx"+i;})
-			.attr("opacity",1.0)
-			.on("mouseover", this.mouseOver)
-			.on("mouseout", this.mouseOut);
+        this.queue.selectAll("g.rect")
+            .data(this.queueData)
+            .enter()
+            .append("rect")
+            .attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(i);})
+            .attr("y",300)
+            .attr("width", this.rectWidth)
+            .attr("height", this.rectHeight)
+            .attr("rx",10)
+            .attr("ry",10)
+            .attr("fill","#FAAF08")
+            .attr("id",function(d,i){return "rectIdx"+i;})
+            .attr("opacity",1.0)
+            .on("mouseover", this.mouseOver)
+            .on("mouseout", this.mouseOut);
 
-		this.queue.selectAll("g.text")
-			.data(this.queueData)
-			.enter()
-			.append("text")
-			.text(function(d,i){return d;})
-			.attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
-		 	.attr("y",function(){return 300+that.rectHeight/5*3;})
-			.attr("fill","black")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("text-anchor","middle")
-			.attr("id",function(d,i){return "textIdx"+i;});
+        this.queue.selectAll("g.text")
+            .data(this.queueData)
+            .enter()
+            .append("text")
+            .text(function(d,i){return d;})
+            .attr("x",function(d,i){return 100+(that.rectWidth+that.padding)*(i) +that.rectWidth/2;})
+            .attr("y",function(){return 300+that.rectHeight/5*3;})
+            .attr("fill","black")
+            .attr("font-family","Consolas")
+            .attr("font-size","20px")
+            .attr("text-anchor","middle")
+            .attr("id",function(d,i){return "textIdx"+i;});
 
-		this.queue.append("text")
-			.text("▼")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("fill","black")
-			.attr("text-anchor","middle")
-			.attr("x",function(){return 100 +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.2;});
+        this.queue.append("text")
+            .text("▼")
+            .attr("font-family","Consolas")
+            .attr("font-size","20px")
+            .attr("fill","black")
+            .attr("text-anchor","middle")
+            .attr("x",function(){return 100 +that.rectWidth/2;})
+            .attr("y",function(){return 300-that.rectHeight*0.2;});
 
-		this.queue.append("text")
-			.text("front")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("fill","black")
-			.attr("text-anchor","middle")
-			.attr("x",function(){return 100 +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.5;});
+        this.queue.append("text")
+            .text("front")
+            .attr("font-family","Consolas")
+            .attr("font-size","20px")
+            .attr("fill","black")
+            .attr("text-anchor","middle")
+            .attr("x",function(){return 100 +that.rectWidth/2;})
+            .attr("y",function(){return 300-that.rectHeight*0.5;});
 
 
-		this.queue.append("text")
-			.text("▼")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("fill","black")
-			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.2;});
+        this.queue.append("text")
+            .text("▼")
+            .attr("font-family","Consolas")
+            .attr("font-size","20px")
+            .attr("fill","black")
+            .attr("text-anchor","middle")
+            .attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
+            .attr("y",function(){return 300-that.rectHeight*0.2;});
 
-		this.queue.append("text")
-			.text("rear")
-			.attr("font-family","Consolas")
-			.attr("font-size","20px")
-			.attr("fill","black")
-			.attr("text-anchor","middle")
-			.attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
-			.attr("y",function(){return 300-that.rectHeight*0.5;});
+        this.queue.append("text")
+            .text("rear")
+            .attr("font-family","Consolas")
+            .attr("font-size","20px")
+            .attr("fill","black")
+            .attr("text-anchor","middle")
+            .attr("x",function(){return 100+(that.rectWidth+that.padding)*(that.rear-that.front) +that.rectWidth/2;})
+            .attr("y",function(){return 300-that.rectHeight*0.5;});
   };
 
   thisplay.Queue = Queue;
@@ -1618,6 +1622,8 @@
     var data = [];
     var treeWidth = 60;
     var treeHeight = 80;
+    var nodeIds = {};
+    var h = [];
 
     var zoom = d3.zoom()
       .scaleExtent([0.1, 10])
@@ -1632,10 +1638,16 @@
     this.treeWidth = treeWidth;
     this.treeHeight = treeHeight;
     this.beforeTreeWidth = 0;
+    this.nodeIds = nodeIds;
+    this.h = h;
   }
 
   Tree.prototype.makeNode = function(id, val) {
-    this.data.push({"val": val, "id": id, "par": -1, "children": []});
+    if (this.nodeIds[id])
+      return;
+    var newNode = {"val": val, "id": id, "children": []};
+    this.nodeIds[id] = newNode;
+    this.data.push(newNode);
     this.redraw();
   };
 
@@ -1657,7 +1669,7 @@
 
   Tree.prototype.connect = function (parId, childId) {
     var par, parIdx, childIdx;
-    var duration = 1000;
+    var duration = 1500;
     var that = this;
 
     this.data.forEach(function(d, i) {
@@ -1678,28 +1690,43 @@
     }
 
     if (!par || childIdx === undefined) {
-      console.log("no id");
-      console.log(par);
-      console.log(childIdx);
+      console.log("invalid id");
       return;
     }
-
+    
+    var parTreeTF = this.svg.select("#tree" + parIdx)
+      .attr("transform");
+    
+    var parNodeTF = this.svg.select("#node" + parId)
+      .attr("transform");
+      
+    var childNodeTF = this.svg.select("#node" + childId)
+      .attr("transform");
+      
+    function getTFArg1 (str) {
+      var a = str.substring(str.indexOf("(") + 1, str.indexOf(","));
+      return Number(a);
+    }
+    function getTFArg2 (str) {
+      var a = str.substring(str.indexOf(",") + 1, str.indexOf(")"));
+      return Number(a);
+    }
+    
+    var TF = "translate(" + 
+      (getTFArg1(parTreeTF) + getTFArg1(parNodeTF) - getTFArg1(childNodeTF)) + "," + 
+      (getTFArg2(parTreeTF) + getTFArg2(parNodeTF) + this.treeHeight) + ")";
+      
+      
+    this.svg.select("#tree" + childIdx)
+      .transition().duration(duration)
+      .attr("transform", TF);
+    
     par.children.push(this.data[childIdx]);
     this.data.splice(childIdx, 1);
-
-    this.connectAni(parIdx, childIdx, duration);
-
+    
     setTimeout(function() {
       that.redraw();
     }, duration);
-  };
-
-  Tree.prototype.connectAni = function (parIdx, childIdx, duration) {
-    this.redrawTrans(duration, parIdx);
-
-    this.svg.selectAll(".trees")
-      .transition().duration(duration)
-      .attr("opacity", function(d, i) { return i === childIdx || i === parIdx ? 0 : 1; });
   };
 
   Tree.prototype.maxDepth = function (root) {
@@ -1732,79 +1759,106 @@
 
     return ret;
   };
-
-  Tree.prototype.redrawTrans = function (duration, idx) {
+    
+  Tree.prototype.highlight = function (id) {
+    this.h.push(id);
+    this.svg.select("#node" + id).select("circle")
+      .style("fill", "#f88");
+  };
+  
+  Tree.prototype.unhighlight = function (id) {
+    if (id === undefined) {
+      this.h = [];
+      this.svg.selectAll(".node")
+        .select("circle")
+        .style("fill", "#fff");
+    }
+    else {
+      var i;
+      for (i = 0; i < this.h.length; i++) {
+        if (this.h[i] === id)
+          break;
+      }
+      this.h.splice(i, 1);
+      this.svg.select("#node" + id).select("circle")
+        .style("fill", "#fff");
+    }
+  };
+  
+  Tree.prototype.recolor = function () {
+    this.svg.selectAll(".node")
+      .select("circle")
+      .style("fill", "#fff");
+    for (var i = 0; i < this.h.length; i++) {
+      var id = this.h[i];
+      this.svg.selectAll("#node" + id).select("circle")
+        .style("fill", "#f88");
+    }
+  };
+  
+  Tree.prototype.redraw = function () {
+    this.clearSVG();
+    
     var that = this;
     this.beforeTreeWidth = 0;
-
-    console.log(idx);
-
-    this.data.forEach(function (data, i) {
-      var maxDepth = 0;
+    
+    for (var i = 0; i < this.data.length; i++) {
+      var data = this.data[i];
       var tree = d3.tree();
       var nodes = d3.hierarchy(data, function (d) { return d.children; });
-      //console.log(nodes);
-      maxDepth = that.maxDepth(nodes);
-      var numLeaf = that.numLeaf(nodes);
-
-      tree.size([that.treeWidth * numLeaf, that.treeHeight * maxDepth]);
+      var maxDepth = 0;
+      maxDepth = this.maxDepth(nodes);
+      var numLeaf = this.numLeaf(nodes);
+      
+      tree.size([this.treeWidth * numLeaf, this.treeHeight * maxDepth]);
       nodes = tree(nodes);
-
-      var g = that.svg//.selectAll(".trees")
+      
+      var g = this.svg
         .append("g")
-        .attr("class", "trees")
+        .attr("class", "tree")
+        .attr("id", "tree" + i)
         .attr("opacity", 1)
-        .attr("transform", function () { return "translate(" + that.beforeTreeWidth + ",0)"; });
-      that.beforeTreeWidth += that.treeWidth * numLeaf;
-
-
-      if (idx !== undefined && idx !== i)
-        return;
+        .attr("transform", "translate(" + that.beforeTreeWidth + ",0)");
+      this.beforeTreeWidth += this.treeWidth * numLeaf;
 
       var link = g.selectAll(".link").data(nodes.descendants().slice(1));
       link.enter().append("path")
         .attr("class", "link")
-        .attr("opacity", 0)
         .attr("d", function(d) {
           return "M" + d.x + "," + d.y +
 						"C" + d.x + "," + (d.y + d.parent.y) / 2 +
 						" " + d.parent.x + "," + (d.y + d.parent.y) / 2 +
 						" " + d.parent.x + "," + d.parent.y;
         })
-        .transition().duration(duration)
         .attr("opacity", 1);
 
       var node = g.selectAll(".node").data(nodes.descendants());
       var nodeEnter = node.enter().append("g")
         .attr("class", "node")
-        .attr("opacity", 0)
+        .attr("id", function (d) { return "node" + d.data.id; })
+        .attr("opacity", 1)
         .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
-
+        
       nodeEnter.append("circle")
         .attr("r", 20);
       nodeEnter.append("text")
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "central")
         .text(function (d) { return d.data.val; });
-
-      nodeEnter.transition().duration(duration)
-        .attr("opacity", 1);
-    });
-  };
-
-  Tree.prototype.redraw = function () {
-    this.clearSVG();
-
-    this.redrawTrans(0);
+    }
+    
+    this.recolor();
   };
 
   Tree.prototype.clear = function () {
     this.data = [];
+    this.h = [];
+    this.nodeIds = {};
     this.redraw();
   };
 
   Tree.prototype.clearSVG = function () {
-    this.svg.selectAll(".trees").remove();
+    this.svg.selectAll(".tree").remove();
   };
 
   window.thisplay.Tree = Tree;
