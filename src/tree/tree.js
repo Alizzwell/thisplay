@@ -102,9 +102,9 @@
       return Number(a);
     }
     
-    var TF = "translate(" 
-      + (getTFArg1(parTreeTF) + getTFArg1(parNodeTF) - getTFArg1(childNodeTF)) + ","
-      + (getTFArg2(parTreeTF) + getTFArg2(parNodeTF) + this.treeHeight) + ")";
+    var TF = "translate(" + 
+      (getTFArg1(parTreeTF) + getTFArg1(parNodeTF) - getTFArg1(childNodeTF)) + "," + 
+      (getTFArg2(parTreeTF) + getTFArg2(parNodeTF) + this.treeHeight) + ")";
       
       
     this.svg.select("#tree" + childIdx)
@@ -153,7 +153,7 @@
   Tree.prototype.highlight = function (id) {
     this.h.push(id);
     this.svg.select("#node" + id).select("circle")
-      .style("fill", "#f88")
+      .style("fill", "#f88");
   };
   
   Tree.prototype.unhighlight = function (id) {
@@ -173,7 +173,7 @@
       this.svg.select("#node" + id).select("circle")
         .style("fill", "#fff");
     }
-  }
+  };
   
   Tree.prototype.recolor = function () {
     this.svg.selectAll(".node")
@@ -182,7 +182,7 @@
     for (var i = 0; i < this.h.length; i++) {
       var id = this.h[i];
       this.svg.selectAll("#node" + id).select("circle")
-        .style("fill", "#f88")
+        .style("fill", "#f88");
     }
   };
   
@@ -206,9 +206,9 @@
       var g = this.svg
         .append("g")
         .attr("class", "tree")
-        .attr("id", function () { return "tree" + i; })
+        .attr("id", "tree" + i)
         .attr("opacity", 1)
-        .attr("transform", function () { return "translate(" + that.beforeTreeWidth + ",0)"; });
+        .attr("transform", "translate(" + that.beforeTreeWidth + ",0)");
       this.beforeTreeWidth += this.treeWidth * numLeaf;
 
       var link = g.selectAll(".link").data(nodes.descendants().slice(1));
@@ -227,7 +227,7 @@
         .attr("class", "node")
         .attr("id", function (d) { return "node" + d.data.id; })
         .attr("opacity", 1)
-        .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
+        .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
         
       nodeEnter.append("circle")
         .attr("r", 20);
