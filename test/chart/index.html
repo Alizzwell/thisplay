@@ -44,6 +44,10 @@
   <p/>
   <button onClick="btnClearClk()">clear</button>
   <p/>
+  <button onClick="btnSetColor()">setColor</button>
+  <input type="text" id="setColor_idx" placeholder="idx" />
+  <input type="text" id="setColor_color" placeholder="color" />
+  <p/>
 
   <script>
     var chart = new thisplay.Chart('#canvas');
@@ -81,6 +85,12 @@
 
     function btnClearClk() {
       chart.clear();
+    }
+
+    function btnSetColor() {
+      var idx = document.getElementById('setColor_idx').value;
+      var color = document.getElementById('setColor_color').value;
+      chart.setColor(Number(idx), color);
     }
   </script>
 </body>

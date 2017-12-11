@@ -105,13 +105,20 @@
   };
 
   Chart.prototype.unhighlight = function (idx) {
+    var self = this;
     if (idx === undefined) {
-      this.h.fill(0);
+      self.h.forEach(function (d, i) {
+        if (d === 1) {
+          self.h[i] = 0;
+        }
+      });
     }
     else {
-      this.h[idx] = 0;
+      if (self.h[idx] === 1) {
+        self.h[idx] = 0;
+      }
     }
-    this.reColoring();
+    self.reColoring();
   };
 
   Chart.prototype.redrawChart = function () {
@@ -142,7 +149,13 @@
     bar.data(this.data)
     .style("fill", function (d, i) {
       if (self.h[i] === 1) return 'red';
+      if (self.h[i] !== 0) return self.h[i];
     });
+  };
+
+  Chart.prototype.setColor = function(idx, color) {
+    this.h[idx] = color;
+    this.reColoring();
   };
 
   thisplay.Chart = Chart;
